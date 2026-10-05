@@ -61,7 +61,7 @@ jobs:
               set sftp:auto-confirm yes;
               echo '--- Startordner:'; pwd; cls -la;
               echo '--- webroots:'; cls -la webroots/;
-              echo '--- Inhalt je Webroot:'; cls -1 webroots/*/;
+              echo '--- Routen:'; cls -la webroots/by-route/; echo '--- 311d3ddd:'; cls -la webroots/311d3ddd/;
               bye" || true
             exit 0
           fi
