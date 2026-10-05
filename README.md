@@ -58,14 +58,16 @@ Noch fehlende Inhalte sind auf der Seite als gelb gestrichelte Kästen markiert 
 
 ## Deployment
 
-`.github/workflows/deploy.yml` baut die Seite und lädt `dist/` per FTPS zu one.com hoch. Es läuft nur, wenn sich `src/`, `public/` oder die Build-Konfiguration ändert.
+`.github/workflows/deploy.yml` baut die Seite und lädt `dist/` per SFTP zu one.com hoch. Es läuft nur, wenn sich `src/`, `public/` oder die Build-Konfiguration ändert. Alte Dateien auf dem Server werden nicht gelöscht.
 
-Benötigte Secrets unter **Settings → Secrets and variables → Actions**:
+Benötigte Secrets unter **Settings → Secrets and variables → Actions** (Werte aus dem one.com Control Panel → Advanced settings → SSH & SFTP):
 
-| Secret | Wert (aus dem one.com Control Panel) |
+| Secret | Wert |
 | --- | --- |
-| `FTP_SERVER` | FTP-Hostname |
-| `FTP_USERNAME` | FTP-Benutzername |
-| `FTP_PASSWORD` | FTP-Passwort |
+| `SFTP_HOST` | SFTP-Host |
+| `SFTP_USERNAME` | SFTP-Benutzername |
+| `SFTP_PASSWORD` | SSH/SFTP-Passwort |
+| `SFTP_PORT` | Port, nur falls nicht 22 |
+| `SFTP_REMOTE_DIR` | Webroot der Testdomain, z. B. `webroots/5dfa4a5d` (Control Panel → Subdomains → Folder) |
 
 Den Status siehst du im Repo unter **Actions**.

@@ -36,16 +36,24 @@ jobs:
       - name: Website bauen
         run: npm run build
 
-      - name: Upload via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          local-dir: ./dist/
-          server-dir: ./
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/.DS_Store
+      # one.com empfiehlt SFTP; Zugangsdaten unter Control Panel → Advanced settings → SSH & SFTP.
+      # SFTP_REMOTE_DIR ist der Webroot der (Sub-)Domain, z. B. webroots/5dfa4a5d (siehe Control Panel → Subdomains).
+      - name: Upload via SFTP
+        env:
+          HOST: ${{ secrets.SFTP_HOST }}
+          PORT: ${{ secrets.SFTP_PORT || '22' }}
+          USER: ${{ secrets.SFTP_USERNAME }}
+          PASS: ${{ secrets.SFTP_PASSWORD }}
+          REMOTE_DIR: ${{ secrets.SFTP_REMOTE_DIR }}
+        run: |
+          if [ -z "$HOST" ] || [ -z "$USER" ] || [ -z "$PASS" ] || [ -z "$REMOTE_DIR" ]; then
+            echo "::error::SFTP-Secrets fehlen (SFTP_HOST, SFTP_USERNAME, SFTP_PASSWORD, SFTP_REMOTE_DIR)"
+            exit 1
+          fi
+          sudo apt-get install -y -qq lftp > /dev/null
+          # Ohne --delete: alte Dateien bleiben liegen, aber nichts außerhalb von dist/ wird angefasst
+          lftp -u "$USER","$PASS" -p "$PORT" "sftp://$HOST" -e "
+            set sftp:auto-confirm yes;
+            set net:max-retries 2;
+            mirror --reverse --verbose --parallel=4 --exclude-glob .DS_Store dist/ '$REMOTE_DIR';
+            bye"
