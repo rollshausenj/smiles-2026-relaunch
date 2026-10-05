@@ -51,3 +51,12 @@ Benötigte Secrets unter **Settings → Secrets and variables → Actions** (Wer
 | `SFTP_PORT` | Port, nur falls nicht 22 |
 
 Den Status siehst du im Repo unter **Actions**.
+
+## Suchmaschinen
+
+In der Testphase ist die Seite für Suchmaschinen gesperrt: `noindex`-Meta-Tag, `robots.txt` mit `Disallow: /` und der Header `X-Robots-Tag` aus `public/.htaccess`.
+
+Zum Relaunch:
+
+1. In `src/config.ts` `INDEXING = true` setzen.
+2. Den `Header set X-Robots-Tag …`-Block aus `public/.htaccess` entfernen.
