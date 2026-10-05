@@ -3,11 +3,21 @@ name: Deploy to one.com
 on:
   push:
     branches: [main]
+    # Nur deployen, wenn sich die ausgelieferte Seite ändert (nicht bei assets/ oder Doku)
+    paths:
+      - "public/**"
+      - ".github/workflows/deploy.yml"
   workflow_dispatch:
+
+# Immer nur ein Upload gleichzeitig; ein neuer Push ersetzt einen wartenden
+concurrency:
+  group: deploy-one-com
+  cancel-in-progress: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
