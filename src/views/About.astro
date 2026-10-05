@@ -1,0 +1,182 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Todo from '../components/Todo.astro';
+import { url, type Lang } from '../i18n/ui';
+import teamBild from '../assets/img/abschluss-2026.jpg';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+// Stand der alten Website (Oktober 2026). Zuordnung und Rollen vor dem Relaunch prüfen.
+const team: { name: string; role?: Record<Lang, string> }[] = [
+  { name: 'Rahel Rollshausen', role: { de: 'Initiatorin, Gründerin und Vorsitzende', en: 'Initiator, co-founder and chair' } },
+  { name: 'Mario Hofmann', role: { de: 'Stellv. Vorsitzender', en: 'Deputy chair' } },
+  { name: 'Hermann Dapper', role: { de: 'Schatzmeister', en: 'Treasurer' } },
+  { name: 'Malte Haring', role: { de: 'Gründer und Vorstand Finanzen', en: 'Co-founder, board member finance' } },
+  { name: 'Majbritt Doege', role: { de: 'Vorstand Kommunikation', en: 'Board member communications' } },
+  { name: 'Julian Rollshausen', role: { de: 'Initiator und Gründer', en: 'Initiator and co-founder' } },
+  { name: 'Kerstin Bonni', role: { de: 'Gründerin', en: 'Co-founder' } },
+  { name: 'Paul Gradinger', role: { de: 'Gründer', en: 'Co-founder' } },
+  { name: 'Yannic Riegger' },
+  { name: 'Marie Worms' },
+  { name: 'Antonia May' },
+  { name: 'Jannik Dornbusch' },
+  { name: 'Andreas Goebbel' },
+  { name: 'Christina Schwab' },
+];
+
+const timeline: [string, Record<Lang, string>][] = [
+  ['2016', { de: 'Gründung als Grassroots-Projekt von Kenianer:innen und deutschen Volunteers; am 11. Juli wird der Smiles Africa e.V. in Mainz gegründet.', en: 'Founded as a grassroots project by Kenyans and German volunteers; on 11 July, Smiles Africa e.V. is registered in Mainz.' }],
+  ['2020', { de: 'Pilotprojekt Digital Empowerment: junge Erwachsene aus Korogocho bauen ihre eigenen Websites.', en: 'Digital Empowerment pilot: young adults from Korogocho build their own websites.' }],
+  ['2023', { de: 'Die ersten vier Stipendiat:innen schließen die Secondary School ab, drei beginnen ein Studium.', en: 'Our first four scholars finish secondary school; three go on to university.' }],
+  ['2025', { de: 'Rekordjahr: so viele Spenden wie nie zuvor.', en: 'Record year: more donations than ever before.' }],
+  ['2026', { de: '10 Jahre Smiles Africa e.V.; Maria, Alvin und Robert schließen ihre Ausbildung ab.', en: '10 years of Smiles Africa e.V.; Maria, Alvin and Robert complete their education.' }],
+];
+
+const c = {
+  de: {
+    title: 'Über uns',
+    heroTitle: 'Zwei Teams, ein Ziel',
+    lead: 'Smiles Africa ist 2016 als Grassroots-Projekt von Kenianer:innen und deutschen Volunteers entstanden. Der Verein in Mainz sammelt Spenden für Bildungsstipendien, das Team in Nairobi begleitet die Stipendiat:innen vor Ort.',
+    historyTitle: 'Unsere Geschichte',
+    teamTitle: 'Das Team in Deutschland',
+    teamText: 'Studierende und Berufstätige aus ganz unterschiedlichen Bereichen, alle ehrenamtlich.',
+    kenyaTitle: 'Das Team in Kenia',
+    kenyaText: 'Unsere kenianischen Kolleg:innen sind selbst in Korogocho aufgewachsen und betreuen dort seit ihrer Jugend soziale Projekte.',
+    kenyaLink: 'Zur Seite des kenianischen Teams',
+    transparencyLink: 'Transparenz & Jahresberichte',
+    todo: 'Teamliste, Rollen und Fotos aktualisieren (Stand alte Website).',
+  },
+  en: {
+    title: 'About us',
+    heroTitle: 'Two teams, one goal',
+    lead: 'Smiles Africa started in 2016 as a grassroots project by Kenyans and German volunteers. The association in Mainz raises donations for scholarships; the team in Nairobi mentors the scholars on site.',
+    historyTitle: 'Our story',
+    teamTitle: 'The team in Germany',
+    teamText: 'Students and professionals from many different fields, all volunteers.',
+    kenyaTitle: 'The team in Kenya',
+    kenyaText: 'Our Kenyan colleagues grew up in Korogocho themselves and have run social projects there since their youth.',
+    kenyaLink: 'Visit the Kenyan team’s page',
+    transparencyLink: 'Transparency & annual reports',
+    todo: 'Update team list, roles and photos (taken from the old website).',
+  },
+}[lang];
+---
+
+<BaseLayout lang={lang} title={c.title} routeKey="about">
+  <PageHero title={c.heroTitle} lead={c.lead} image={teamBild} imageAlt="" />
+
+  <section class="section">
+    <div class="container narrow">
+      <h2>{c.historyTitle}</h2>
+      <ol class="timeline">
+        {
+          timeline.map(([year, text]) => (
+            <li>
+              <span class="year">{year}</span>
+              <p>{text[lang]}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--white">
+    <div class="container">
+      <h2>{c.teamTitle}</h2>
+      <p class="lead">{c.teamText}</p>
+      <ul class="team">
+        {
+          team.map((m) => (
+            <li>
+              <span class="avatar" aria-hidden="true">{m.name.split(' ').map((p) => p[0]).join('')}</span>
+              <strong>{m.name}</strong>
+              {m.role && <span>{m.role[lang]}</span>}
+            </li>
+          ))
+        }
+      </ul>
+      <Todo>{c.todo}</Todo>
+    </div>
+  </section>
+
+  <section class="section section--black">
+    <div class="container grid grid--2">
+      <h2 class="ke">{c.kenyaTitle}</h2>
+      <div>
+        <p class="lead">{c.kenyaText}</p>
+        <div class="actions">
+          <a class="btn btn--primary" href={url('teamKenya', lang)}>{c.kenyaLink}</a>
+          <a class="btn btn--ghost" href={url('transparency', lang)}>{c.transparencyLink}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .timeline li {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 2px solid var(--line);
+  }
+
+  .year {
+    font-weight: 800;
+    font-stretch: 125%;
+    font-size: 1.6rem;
+    line-height: 1.2;
+  }
+
+  .timeline p {
+    margin: 0;
+  }
+
+  .team {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0;
+    display: grid;
+    gap: 24px 16px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+  }
+
+  .team li {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .avatar {
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--yellow);
+    font-weight: 800;
+    font-stretch: 125%;
+    margin-bottom: 8px;
+  }
+
+  .team span:not(.avatar) {
+    color: var(--ink-muted);
+    font-size: 0.95rem;
+  }
+
+  .ke {
+    color: var(--yellow);
+  }
+</style>

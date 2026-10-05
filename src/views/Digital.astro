@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import YouTube from '../components/YouTube.astro';
+import { url, type Lang } from '../i18n/ui';
+import digital from '../assets/img/digital-empowerment.jpg';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+// Videos aus dem Workshop-Recap der alten Seite
+const videos = ['68pxYs-faDM', 'GY9cIu9WEIU', 'gyNTSqeQ3mg', 'jpiHFayOeq4', 's3e__VIm0hU', 'slopGuMg0zY', 'ub5LJhWDafU'];
+const participants = ['Sharon', 'Kizito', 'Felix', 'Shanel', 'Mike', 'Iscah', 'Synclair', 'Ken', 'Bariso'];
+
+const c = {
+  de: {
+    eyebrow: 'Abgeschlossenes Projekt · 2020',
+    title: 'Digital Empowerment',
+    lead: 'Digitale Bildung kann ein Schlüssel aus der Armut sein. Anfang 2020 haben wir deshalb einen einwöchigen Intensiv-Workshop mit jungen Erwachsenen aus Korogocho veranstaltet.',
+    goalTitle: 'Ziel',
+    goal: 'Die Teilnehmenden sollten mit WordPress eigene Websites bauen, live schalten und danach selbstständig pflegen. Ein Digital-Empowerment-Netzwerk sollte den Austausch dauerhaft sichern und das Wissen weitertragen.',
+    resultTitle: 'Ergebnis',
+    result: 'Fast alle Teilnehmenden sind nach sechs Tagen mit ihrer eigenen Website online gegangen. Das Netzwerk entstand, und die Seiten wurden auch ohne uns weiterentwickelt.',
+    peopleTitle: 'Die Teilnehmenden',
+    videosTitle: 'Der Workshop im Video',
+    back: 'Zurück zu den Projekten',
+  },
+  en: {
+    eyebrow: 'Completed project · 2020',
+    title: 'Digital Empowerment',
+    lead: 'Digital skills can be a way out of poverty. In early 2020 we ran a one-week intensive workshop with young adults from Korogocho.',
+    goalTitle: 'Goal',
+    goal: 'Participants were to build their own websites with WordPress, publish them and maintain them independently. A Digital Empowerment network was to keep the exchange going and pass the knowledge on.',
+    resultTitle: 'Result',
+    result: 'After six days almost every participant went live with their own website. The network was set up, and the sites kept evolving without us.',
+    peopleTitle: 'The participants',
+    videosTitle: 'The workshop on video',
+    back: 'Back to projects',
+  },
+}[lang];
+---
+
+<BaseLayout lang={lang} title={c.title} routeKey="digital">
+  <PageHero eyebrow={c.eyebrow} title={c.title} lead={c.lead} image={digital} imageAlt="" />
+
+  <section class="section">
+    <div class="container grid grid--2">
+      <div>
+        <h2>{c.goalTitle}</h2>
+        <p>{c.goal}</p>
+      </div>
+      <div>
+        <h2>{c.resultTitle}</h2>
+        <p>{c.result}</p>
+        <h3>{c.peopleTitle}</h3>
+        <p>{participants.join(' · ')}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white">
+    <div class="container">
+      <h2>{c.videosTitle}</h2>
+      <div class="grid grid--3">
+        {videos.map((id, i) => <YouTube id={id} title={`Digital Empowerment ${i + 1}`} lang={lang} />)}
+      </div>
+      <p><a href={url('projects', lang)}>← {c.back}</a></p>
+    </div>
+  </section>
+</BaseLayout>

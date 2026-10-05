@@ -1,0 +1,217 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import DonateBand from '../components/DonateBand.astro';
+import { getPosts } from '../lib/blog';
+import { t, url, type Lang } from '../i18n/ui';
+import abschluss from '../assets/img/abschluss-2026.jpg';
+import kidsLernen from '../assets/img/kids-lernen.jpg';
+import zehnJahre from '../assets/img/10-jahre.jpg';
+import rtl from '../assets/img/rtl-spende.jpg';
+import pelzl from '../assets/img/pelzl-kooperation.jpg';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+// Englische Seite zeigt deutsche Beiträge, solange es keine englischen gibt
+const enPosts = lang === 'en' ? await getPosts('en') : [];
+const posts = (enPosts.length ? enPosts : await getPosts('de')).slice(0, 3);
+
+const c = {
+  de: {
+    heroEyebrow: 'Juni 2026 · Abschlussfeier in Nairobi',
+    heroTitle: 'Bildung, die Zukunft schafft.',
+    heroLead:
+      'Maria, Alvin und Robert haben ihre Bildungsabschlüsse geschafft. Seit 2016 begleiten wir Kinder und Jugendliche aus Korogocho, Nairobi – mit Stipendien, Mentoring und so lange, bis ihr Bildungsweg abgeschlossen ist.',
+    heroAlt: 'Stipendiat:innen und Team von Smiles Africa vor einem roten Tor in Nairobi',
+    approachTitle: 'So wirkt deine Spende',
+    approach: [
+      {
+        title: 'Scholarship',
+        text: 'Wir zahlen Schulgebühren, Uniformen und Material – an Schulen, die wirklich gute Bildung bieten.',
+      },
+      {
+        title: 'Mentorship',
+        text: 'Unser Team vor Ort ist selbst in Korogocho aufgewachsen und begleitet jede:n Stipendiat:in persönlich.',
+      },
+      {
+        title: 'Bis zum Abschluss',
+        text: 'Wir fördern bedingungslos und langfristig: von der Grundschule bis zu Ausbildung oder Universität.',
+      },
+    ],
+    storiesTitle: 'Geschichten aus 2026',
+    stories: [
+      { img: zehnJahre, alt: 'Grafik zum zehnjährigen Jubiläum', title: '10 Jahre Smiles Africa e.V.', text: 'Am 11. Juli 2026 hat unser Verein Geburtstag gefeiert – eine Dekade Bildungschancen.' },
+      { img: rtl, alt: 'Spendenübergabe von RTL – Wir helfen Kindern', title: '10.000 € für den Weg zur Uni', text: '„RTL – Wir helfen Kindern“ unterstützt acht Stipendiat:innen, die bald ihr Studium beginnen.' },
+      { img: pelzl, alt: 'Besuch aus Schweinfurt in Nairobi', title: 'Schulen helfen Schulen', text: 'Die Pelzl-Schulen in Schweinfurt sammeln mit Schulläufen und Kuchenverkäufen für unsere Kids.' },
+    ],
+    newsTitle: 'Aktuelles',
+  },
+  en: {
+    heroEyebrow: 'June 2026 · Graduation in Nairobi',
+    heroTitle: 'Education that creates a future.',
+    heroLead:
+      'Maria, Alvin and Robert have completed their education. Since 2016 we have supported children and young people from Korogocho, Nairobi – with scholarships, mentoring and for as long as it takes to finish their education.',
+    heroAlt: 'Scholars and the Smiles Africa team in front of a red gate in Nairobi',
+    approachTitle: 'What your donation does',
+    approach: [
+      { title: 'Scholarship', text: 'We pay school fees, uniforms and materials – at schools that offer genuinely good education.' },
+      { title: 'Mentorship', text: 'Our local team grew up in Korogocho themselves and mentors every scholar personally.' },
+      { title: 'Until graduation', text: 'Our support is unconditional and long-term: from primary school to vocational training or university.' },
+    ],
+    storiesTitle: 'Stories from 2026',
+    stories: [
+      { img: zehnJahre, alt: 'Graphic for our tenth anniversary', title: '10 years of Smiles Africa e.V.', text: 'On 11 July 2026 our association turned ten – a decade of educational opportunities.' },
+      { img: rtl, alt: 'Donation handover by RTL – Wir helfen Kindern', title: '€10,000 for the path to university', text: '“RTL – Wir helfen Kindern” supports eight scholars who will soon start university.' },
+      { img: pelzl, alt: 'Visitors from Schweinfurt in Nairobi', title: 'Schools helping schools', text: 'The Pelzl schools in Schweinfurt raise money for our kids with charity runs and bake sales.' },
+    ],
+    newsTitle: 'News',
+  },
+}[lang];
+---
+
+<BaseLayout lang={lang} routeKey="home">
+  <section class="hero section--yellow">
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow">{c.heroEyebrow}</span>
+        <h1>{c.heroTitle}</h1>
+        <p class="lead">{c.heroLead}</p>
+        <div class="actions">
+          <a class="btn btn--dark" href={url('donate', lang)}>{t(lang, 'cta.donate')}</a>
+          <a class="btn btn--ghost" href={url('projects', lang)}>{t(lang, 'cta.more')}</a>
+        </div>
+      </div>
+      <Image src={abschluss} alt={c.heroAlt} widths={[400, 640]} sizes="(min-width: 900px) 45vw, 100vw" loading="eager" />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>{c.approachTitle}</h2>
+      <div class="grid grid--3 pillars">
+        {
+          c.approach.map((p, i) => (
+            <div class="pillar">
+              <span class="num">0{i + 1}</span>
+              <h3>{p.title}</h3>
+              <p>{p.text}</p>
+            </div>
+          ))
+        }
+      </div>
+      <Image class="wide" src={kidsLernen} alt="" widths={[800, 1600, 2400]} sizes="(min-width: 1200px) 1150px, 100vw" />
+    </div>
+  </section>
+
+  <section class="section section--white">
+    <div class="container">
+      <h2>{c.storiesTitle}</h2>
+      <div class="grid grid--3">
+        {
+          c.stories.map((s) => (
+            <article class="story">
+              <Image src={s.img} alt={s.alt} widths={[400, 640]} sizes="(min-width: 900px) 33vw, 100vw" />
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="head">
+        <h2>{c.newsTitle}</h2>
+        <a href={url('news', lang)}>{t(lang, 'news.all')} →</a>
+      </div>
+      <div class="grid grid--3">
+        {posts.map((post) => <PostCard post={post} lang={lang} />)}
+      </div>
+    </div>
+  </section>
+
+  <DonateBand lang={lang} />
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: clamp(40px, 7vw, 96px);
+  }
+
+  .hero-grid {
+    display: grid;
+    gap: clamp(24px, 4vw, 64px);
+    align-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .hero-grid {
+      grid-template-columns: 1.15fr 0.85fr;
+    }
+  }
+
+  .hero img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--radius);
+    border: 3px solid var(--black);
+    box-shadow: 10px 10px 0 var(--black);
+  }
+
+  .pillars {
+    margin-block: 32px 48px;
+  }
+
+  .pillar {
+    border-top: 6px solid var(--yellow);
+    padding-top: 16px;
+  }
+
+  .num {
+    font-weight: 800;
+    font-stretch: 125%;
+    font-size: 2.5rem;
+    line-height: 1;
+    color: var(--black);
+    -webkit-text-stroke: 0;
+  }
+
+  .wide {
+    width: 100%;
+    aspect-ratio: 21 / 8;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+
+  .story img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+  }
+
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+
+  .head h2 {
+    margin: 0;
+  }
+
+  .head a {
+    font-weight: 700;
+  }
+</style>

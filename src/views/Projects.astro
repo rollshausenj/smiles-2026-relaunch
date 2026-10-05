@@ -1,0 +1,178 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import DonateBand from '../components/DonateBand.astro';
+import YouTube from '../components/YouTube.astro';
+import Todo from '../components/Todo.astro';
+import { url, type Lang } from '../i18n/ui';
+import universitaet from '../assets/img/universitaet.jpg';
+import korogocho from '../assets/img/korogocho.jpg';
+import digital from '../assets/img/digital-empowerment.jpg';
+import hygiene from '../assets/img/hygiene.jpg';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+const c = {
+  de: {
+    title: 'Projekte',
+    eyebrow: 'Unser Projekt',
+    heroTitle: 'Qualitative Bildung',
+    lead: 'Wir finanzieren Bildungsstipendien für Kinder und Jugendliche aus Korogocho, einem der größten Slums Nairobis – und begleiten sie mit einem Mentorship-Programm, bis sie ihren Bildungsweg abgeschlossen haben.',
+    principlesTitle: 'Unsere Grundsätze',
+    principles: [
+      ['Qualitative Bildung', 'Wir sichern Schulgebühren und Uniformen und fördern unsere Stipendiat:innen zusätzlich im Mentorship-Programm – individuell und spielerisch, nah an ihrem Alltag.'],
+      ['Gemeinschaftliche Betreuung', 'Wir fördern unsere Stipendiat:innen als Team. Deine Spende wird dort eingesetzt, wo sie am meisten gebraucht wird.'],
+      ['Bedingungslose Förderung', 'Wir unterstützen unabhängig von Noten. Braucht jemand einen Schulwechsel oder Nachhilfe, suchen wir gemeinsam mit der Familie nach Lösungen.'],
+      ['Nachhaltige Veränderung', 'Gegründet als Grassroots-Projekt von Menschen, die selbst in Korogocho aufgewachsen sind – für Veränderung von innen heraus.'],
+      ['Kontinuierliche Unterstützung', 'Wir finanzieren langfristig und gehen keine Risiken ein: Qualität statt Quantität, bis zum Abschluss.'],
+      ['Zusammenarbeitende Gesellschaft', 'Die Familien sind Teil des Prozesses. So verbessert sich nicht nur ein Bildungsweg, sondern das Leben vieler.'],
+    ],
+    scholarshipTitle: 'Scholarship',
+    scholarship: 'Staatliche Schulen sind in Kenia teilweise gebührenfrei – Uniformen, Schuhe, Bücher, Material und Mittagessen aber nicht. Schon daran scheitern viele Familien. Dazu kommt: In den Slums gibt es kaum staatliche Schulen, weil sie nicht als offizielle Stadtteile anerkannt sind. Wir bringen unsere Stipendiat:innen deshalb an Schulen mit qualifizierten Lehrkräften und übernehmen die Kosten.',
+    mentorshipTitle: 'Mentorship',
+    mentorship: 'Das kenianische Team betreut die Stipendiat:innen vor Ort – regelmäßig, persönlich und auch bei Themen außerhalb der Schule. Die Mentor:innen sind selbst in Korogocho aufgewachsen und kennen die Herausforderungen aus eigener Erfahrung.',
+    systemLink: 'Wie funktioniert das kenianische Bildungssystem?',
+    archiveTitle: 'Abgeschlossene Projekte',
+    archiveLead: 'Neben den Stipendien haben wir weitere Projekte umgesetzt. Sie sind abgeschlossen – wir dokumentieren sie hier.',
+    digital: ['Digital Empowerment (2020)', 'Ein einwöchiger Workshop, in dem junge Erwachsene aus Korogocho eigene Websites gebaut haben.'],
+    hygiene: ['Hygiene', 'Wasserstationen und Aufklärung zum Händewaschen in Korogocho.'],
+    videoTitle: 'Smiles Africa im Video',
+  },
+  en: {
+    title: 'Projects',
+    eyebrow: 'Our project',
+    heroTitle: 'Quality education',
+    lead: 'We fund scholarships for children and young people from Korogocho, one of Nairobi’s largest informal settlements – and support them with a mentorship programme until they complete their education.',
+    principlesTitle: 'Our principles',
+    principles: [
+      ['Quality education', 'We cover school fees and uniforms and support our scholars in a mentorship programme – individually, playfully and close to their everyday lives.'],
+      ['Shared support', 'We support our scholars as a team. Your donation goes where it is needed most.'],
+      ['Unconditional support', 'We support scholars regardless of grades. If someone needs a new school or tutoring, we find solutions together with the family.'],
+      ['Lasting change', 'Founded as a grassroots project by people who grew up in Korogocho – for change from within.'],
+      ['Continuous support', 'We fund long-term and take no risks: quality over quantity, until graduation.'],
+      ['Community', 'Families are part of the process, so it is not just one education path that improves, but many lives.'],
+    ],
+    scholarshipTitle: 'Scholarship',
+    scholarship: 'Public schools in Kenya are partly free – but uniforms, shoes, books, materials and lunch are not, and many families cannot afford them. On top of that, there are hardly any public schools in the slums, as they are not recognised as official districts. So we place our scholars at schools with qualified teachers and cover the costs.',
+    mentorshipTitle: 'Mentorship',
+    mentorship: 'Our Kenyan team mentors the scholars on site – regularly, personally, and on topics beyond school. The mentors grew up in Korogocho themselves and know the challenges first-hand.',
+    systemLink: 'How does Kenya’s education system work?',
+    archiveTitle: 'Completed projects',
+    archiveLead: 'Besides the scholarships we have run other projects. They are completed – we document them here.',
+    digital: ['Digital Empowerment (2020)', 'A one-week workshop in which young adults from Korogocho built their own websites.'],
+    hygiene: ['Hygiene', 'Water stations and hand-washing awareness in Korogocho.'],
+    videoTitle: 'Smiles Africa on video',
+  },
+}[lang];
+---
+
+<BaseLayout lang={lang} title={c.title} routeKey="projects">
+  <PageHero eyebrow={c.eyebrow} title={c.heroTitle} lead={c.lead} image={universitaet} imageAlt="" />
+
+  <section class="section">
+    <div class="container">
+      <h2>{c.principlesTitle}</h2>
+      <div class="grid grid--3">
+        {
+          c.principles.map(([title, text]) => (
+            <div class="principle">
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white">
+    <div class="container grid grid--2">
+      <Image src={korogocho} alt="Korogocho, Nairobi" widths={[600, 1000, 1400]} sizes="(min-width: 900px) 50vw, 100vw" class="photo" />
+      <div>
+        <h2>{c.scholarshipTitle}</h2>
+        <p>{c.scholarship}</p>
+        <h2>{c.mentorshipTitle}</h2>
+        <p>{c.mentorship}</p>
+        <Todo label={lang === 'de' ? 'Zahlen folgen' : 'Numbers pending'}>
+          {lang === 'de' ? 'Aktuelle Zahl der Stipendiat:innen je Schulstufe mit Stand-Datum.' : 'Current number of scholars per school level, with date.'}
+        </Todo>
+        <p><a href={url('education', lang)}>{c.systemLink} →</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>{c.archiveTitle}</h2>
+      <p class="lead">{c.archiveLead}</p>
+      <div class="grid grid--2 archive">
+        <a class="tile" href={url('digital', lang)}>
+          <Image src={digital} alt="" widths={[500, 900]} sizes="(min-width: 900px) 50vw, 100vw" />
+          <h3>{c.digital[0]}</h3>
+          <p>{c.digital[1]}</p>
+        </a>
+        <a class="tile" href={url('hygiene', lang)}>
+          <Image src={hygiene} alt="" widths={[500, 900]} sizes="(min-width: 900px) 50vw, 100vw" />
+          <h3>{c.hygiene[0]}</h3>
+          <p>{c.hygiene[1]}</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white">
+    <div class="container narrow">
+      <h2>{c.videoTitle}</h2>
+      <YouTube id="qyb4yy1nlVo" title="Smiles Africa Charity" lang={lang} />
+    </div>
+  </section>
+
+  <DonateBand lang={lang} />
+</BaseLayout>
+
+<style>
+  .principle {
+    border-top: 6px solid var(--yellow);
+    padding-top: 16px;
+  }
+
+  .photo {
+    width: 100%;
+    border-radius: var(--radius);
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  .archive {
+    align-items: stretch;
+    margin-top: 24px;
+  }
+
+  .tile {
+    display: block;
+    text-decoration: none;
+    background: var(--white);
+    border: 2px solid var(--black);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .tile img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  .tile h3,
+  .tile p {
+    padding-inline: 20px;
+  }
+
+  .tile h3 {
+    margin-top: 20px;
+  }
+</style>

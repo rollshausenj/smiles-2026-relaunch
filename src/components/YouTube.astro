@@ -1,0 +1,87 @@
+---
+/**
+ * Zwei-Klick-Einbettung: Erst nach Klick wird youtube-nocookie.com geladen.
+ * Vorher wird nur ein lokales Platzhalterbild gezeigt – keine Daten an Google.
+ */
+import { t, url, type Lang } from '../i18n/ui';
+
+interface Props {
+  id: string;
+  title: string;
+  lang: Lang;
+}
+
+const { id, title, lang } = Astro.props;
+---
+
+<figure class="yt" data-id={id} data-title={title}>
+  <button type="button" class="play">
+    <span class="icon" aria-hidden="true">▶</span>
+    <span>{t(lang, 'video.play')}</span>
+  </button>
+  <figcaption>
+    <strong>{title}</strong><br />
+    {t(lang, 'video.consent')} <a href={url('privacy', lang)}>{lang === 'de' ? 'Datenschutz' : 'Privacy'}</a>
+  </figcaption>
+</figure>
+
+<style>
+  .yt {
+    margin: 0;
+  }
+
+  .play {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: var(--black);
+    color: var(--yellow);
+    border: 0;
+    border-radius: var(--radius);
+    font: inherit;
+    font-weight: 800;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .icon {
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--yellow);
+    color: var(--black);
+    font-size: 1.8rem;
+  }
+
+  figcaption {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    margin-top: 8px;
+  }
+
+  .yt :global(iframe) {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    border-radius: var(--radius);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.yt').forEach((fig) => {
+    fig.querySelector('.play')?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${fig.dataset.id}?autoplay=1`;
+      iframe.title = fig.dataset.title ?? '';
+      iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+      iframe.allowFullscreen = true;
+      fig.querySelector('.play')?.replaceWith(iframe);
+    });
+  });
+</script>

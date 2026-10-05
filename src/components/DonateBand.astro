@@ -1,0 +1,38 @@
+---
+import { t, url, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = {
+  de: {
+    title: 'Jede Spende ist ein Stück Zukunft',
+    text: '10 € decken den Jahresbedarf an Schreibpapier für eine:n Schüler:in der Sekundarstufe. Deine Spende geht dorthin, wo sie gerade am meisten gebraucht wird.',
+  },
+  en: {
+    title: 'Every donation is a piece of future',
+    text: '€10 covers a secondary school student’s writing paper for a whole year. Your donation goes where it is needed most.',
+  },
+}[lang];
+---
+
+<section class="section section--black band">
+  <div class="container grid grid--2">
+    <h2>{copy.title}</h2>
+    <div>
+      <p class="lead">{copy.text}</p>
+      <div class="actions">
+        <a class="btn btn--primary" href={url('donate', lang)}>{t(lang, 'cta.donate')}</a>
+        <a class="btn btn--ghost" href={url('join', lang)}>{t(lang, 'cta.join')}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .band h2 {
+    color: var(--yellow);
+  }
+</style>

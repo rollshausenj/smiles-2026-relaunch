@@ -1,0 +1,278 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/img/logo.png';
+import { languages, nav, t, url, type Lang, type RouteKey } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  alternates: Partial<Record<Lang, string>>;
+  current?: RouteKey;
+}
+
+const { lang, alternates, current } = Astro.props;
+const path = Astro.url.pathname;
+const isActive = (href: string, key: RouteKey) =>
+  key === current || (href !== '/' && href !== '/en/' && path.startsWith(href));
+---
+
+<header class="site-header">
+  <div class="container bar">
+    <a class="brand" href={url('home', lang)} aria-label={t(lang, 'site.title')}>
+      <Image src={logo} alt="" width={56} height={56} loading="eager" />
+      <span class="brand-text">Smiles <span>Africa</span></span>
+    </a>
+
+    <details class="menu">
+      <summary>
+        <span class="burger" aria-hidden="true"></span>
+        <span class="menu-label">{t(lang, 'nav.menu')}</span>
+      </summary>
+      <nav aria-label="Hauptnavigation">
+        <ul>
+          {
+            nav.map((item) => {
+              const href = url(item.key, lang);
+              return (
+                <li>
+                  <a href={href} aria-current={isActive(href, item.key) ? 'page' : undefined}>
+                    {item.label[lang]}
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </nav>
+    </details>
+
+    <div class="tools">
+      <ul class="lang" aria-label="Sprache / Language">
+        {
+          (Object.keys(languages) as Lang[]).map((l) => (
+            <li>
+              {l === lang ? (
+                <span aria-current="true">{l.toUpperCase()}</span>
+              ) : (
+                <a href={alternates[l] ?? url('home', l)} hreflang={l} lang={l} title={languages[l]}>
+                  {l.toUpperCase()}
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+      <a class="btn btn--primary donate" href={url('donate', lang)}>{t(lang, 'cta.donate')}</a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--black);
+    color: var(--white);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 72px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    margin-right: auto;
+  }
+
+  .brand {
+    flex-shrink: 0;
+  }
+
+  .brand img {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+  }
+
+  .brand-text {
+    font-weight: 800;
+    font-stretch: 125%;
+    text-transform: uppercase;
+    line-height: 1;
+    font-size: 1.05rem;
+  }
+
+  .brand-text span {
+    color: var(--yellow);
+  }
+
+  .menu summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 8px;
+    cursor: pointer;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+  }
+
+  .menu summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .burger,
+  .burger::before,
+  .burger::after {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: currentColor;
+    position: relative;
+  }
+
+  .burger::before,
+  .burger::after {
+    content: '';
+    position: absolute;
+  }
+
+  .burger::before {
+    top: -7px;
+  }
+
+  .burger::after {
+    top: 7px;
+  }
+
+  nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav a {
+    display: block;
+    white-space: nowrap;
+    text-decoration: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 0.9rem;
+    padding: 12px 0;
+  }
+
+  nav a[aria-current='page'] {
+    color: var(--yellow);
+  }
+
+  .tools {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .lang {
+    list-style: none;
+    display: flex;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .lang a,
+  .lang span {
+    display: inline-block;
+    padding: 6px;
+    text-decoration: none;
+  }
+
+  .lang span {
+    color: var(--yellow);
+  }
+
+  .donate {
+    white-space: nowrap;
+    min-height: 40px;
+    padding: 0.5em 1em;
+    font-size: 0.8rem;
+  }
+
+  /* Mobil: Menü klappt unter der Leiste auf */
+  @media (max-width: 1079px) {
+    .menu {
+      order: 3;
+    }
+
+    .menu nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      background: var(--black);
+      padding: 8px var(--gutter) 24px;
+      border-top: 1px solid #333;
+    }
+
+    .menu nav a {
+      font-size: 1.1rem;
+      border-bottom: 1px solid #2a2a2a;
+    }
+
+    .brand-text {
+      display: none;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .bar {
+      gap: 8px;
+    }
+
+    .menu-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+  }
+
+  @media (max-width: 420px) {
+    .donate {
+      padding: 0.5em 0.8em;
+      font-size: 0.72rem;
+    }
+  }
+
+  /* Desktop: Navigation immer sichtbar, Menü-Knopf ausgeblendet */
+  @media (min-width: 1080px) {
+    .menu summary {
+      display: none;
+    }
+
+    nav ul {
+      display: flex;
+      gap: 24px;
+    }
+  }
+</style>
+
+<script>
+  // Auf dem Desktop soll die Navigation immer offen sein; <details> braucht dafür das open-Attribut.
+  const menu = document.querySelector<HTMLDetailsElement>('.site-header .menu');
+  const mq = window.matchMedia('(min-width: 1080px)');
+  const sync = () => menu && (menu.open = mq.matches);
+  sync();
+  mq.addEventListener('change', sync);
+</script>

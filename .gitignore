@@ -2,3 +2,7 @@
 .vscode/
 *.log
 .env
+node_modules/
+dist/
+.astro/
+.claude/

@@ -1,0 +1,72 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Todo from '../components/Todo.astro';
+import { url, type Lang } from '../i18n/ui';
+import hygiene from '../assets/img/hygiene.jpg';
+
+const gallery = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/img/hygiene/*.jpg',
+  { eager: true },
+);
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+const c = {
+  de: {
+    eyebrow: 'Abgeschlossenes Projekt',
+    title: 'Hygiene',
+    lead: 'Mit Wasserstationen und Aufklärung zum Händewaschen haben wir in Korogocho zur Gesundheit der Kinder und ihrer Familien beigetragen.',
+    todo: 'Beschreibung vom Team: Zeitraum, was genau umgesetzt wurde, Ergebnisse. Grundlage: Instagram-Highlight „hygiene“.',
+    galleryTitle: 'Eindrücke',
+    back: 'Zurück zu den Projekten',
+  },
+  en: {
+    eyebrow: 'Completed project',
+    title: 'Hygiene',
+    lead: 'With water stations and hand-washing awareness we contributed to the health of children and their families in Korogocho.',
+    todo: 'Description from the team: time frame, what exactly was done, results. Source: Instagram highlight “hygiene”.',
+    galleryTitle: 'Impressions',
+    back: 'Back to projects',
+  },
+}[lang];
+---
+
+<BaseLayout lang={lang} title={c.title} routeKey="hygiene">
+  <PageHero eyebrow={c.eyebrow} title={c.title} lead={c.lead} image={hygiene} imageAlt="" />
+
+  <section class="section">
+    <div class="container">
+      <Todo>{c.todo}</Todo>
+      <h2>{c.galleryTitle}</h2>
+      <div class="gallery">
+        {
+          Object.values(gallery).map((img) => (
+            <Image src={img.default} alt="" widths={[400, 800]} sizes="(min-width: 900px) 33vw, 50vw" />
+          ))
+        }
+      </div>
+      <p><a href={url('projects', lang)}>← {c.back}</a></p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .gallery {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+    margin-bottom: 32px;
+  }
+
+  .gallery img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+</style>

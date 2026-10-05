@@ -1,0 +1,53 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { languages, routes, t, type Lang, type RouteKey } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  description?: string;
+  /** Schlüssel aus routes – sorgt für hreflang und den Sprachumschalter. */
+  routeKey?: RouteKey;
+  /** Für Seiten ohne Gegenstück in der anderen Sprache (z. B. Blogbeiträge). */
+  alternates?: Partial<Record<Lang, string>>;
+}
+
+const { lang, title, description = t(lang, 'site.description'), routeKey, alternates } = Astro.props;
+const siteTitle = t(lang, 'site.title');
+const fullTitle = title ? `${title} – ${siteTitle}` : `${siteTitle} – ${t(lang, 'site.claim')}`;
+
+const alt: Partial<Record<Lang, string>> = alternates ?? (routeKey ? routes[routeKey] : {});
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {
+      (Object.keys(languages) as Lang[])
+        .filter((l) => alt[l])
+        .map((l) => <link rel="alternate" hreflang={l} href={new URL(alt[l]!, Astro.site)} />)
+    }
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={lang === 'de' ? 'de_DE' : 'en_GB'} />
+    <meta name="theme-color" content="#111111" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t(lang, 'nav.skip')}</a>
+    <Header lang={lang} alternates={alt} current={routeKey} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>

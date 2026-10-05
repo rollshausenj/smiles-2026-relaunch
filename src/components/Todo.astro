@@ -1,0 +1,24 @@
+---
+/** Sichtbarer Platzhalter für Inhalte, die noch geliefert werden. Vor dem Relaunch alle entfernen. */
+interface Props {
+  label?: string;
+}
+const { label = 'Inhalt folgt' } = Astro.props;
+---
+
+<aside class="todo" data-todo>
+  <strong>{label}:</strong>
+  <slot />
+</aside>
+
+<style>
+  .todo {
+    border: 2px dashed #b9a800;
+    background: #fffbd1;
+    color: #4a4300;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-block: 1rem;
+    font-size: 0.95rem;
+  }
+</style>
