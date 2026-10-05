@@ -1,4 +1,5 @@
 @import '@fontsource-variable/roboto-mono';
+@import '@fontsource-variable/space-grotesk';
 
 :root {
   --bg: #0b0b0c;
@@ -12,6 +13,8 @@
 
   --font: 'Roboto Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
   --mono: var(--font);
+  /* Überschriften */
+  --display: 'Space Grotesk Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --radius: 22px;
   --gutter: clamp(16px, 5vw, 56px);
   --max: 1240px;
@@ -66,9 +69,10 @@ a {
 h1,
 h2,
 h3 {
+  font-family: var(--display);
   font-weight: 700;
-  line-height: 1.02;
-  letter-spacing: -0.05em;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
   margin: 0 0 0.5em;
   text-wrap: balance;
 }
