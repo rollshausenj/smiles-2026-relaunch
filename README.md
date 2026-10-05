@@ -39,6 +39,8 @@ Noch fehlende Inhalte sind auf der Seite als gelb gestrichelte Kästen markiert 
 
 `.github/workflows/deploy.yml` baut die Seite und lädt `dist/` per SFTP zu one.com hoch. Es läuft nur, wenn sich `src/`, `public/` oder die Build-Konfiguration ändert. Alte Dateien auf dem Server werden nicht gelöscht.
 
+Ziel ist der Webroot der Testdomain test.rollshausen.com (`webroots/311d3ddd`, eingetragen in `deploy.yml`). Unter **Actions → Deploy to one.com → Run workflow** mit „Nur Ordner auflisten“ lässt sich prüfen, welcher Webroot zu welcher Domain gehört.
+
 Benötigte Secrets unter **Settings → Secrets and variables → Actions** (Werte aus dem one.com Control Panel → Advanced settings → SSH & SFTP):
 
 | Secret | Wert |
@@ -47,6 +49,5 @@ Benötigte Secrets unter **Settings → Secrets and variables → Actions** (Wer
 | `SFTP_USERNAME` | SFTP-Benutzername |
 | `SFTP_PASSWORD` | SSH/SFTP-Passwort |
 | `SFTP_PORT` | Port, nur falls nicht 22 |
-| `SFTP_REMOTE_DIR` | Webroot der Testdomain, z. B. `webroots/5dfa4a5d` (Control Panel → Subdomains → Folder) |
 
 Den Status siehst du im Repo unter **Actions**.

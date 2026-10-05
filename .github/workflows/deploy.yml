@@ -42,17 +42,18 @@ jobs:
         run: npm run build
 
       # one.com empfiehlt SFTP; Zugangsdaten unter Control Panel → Advanced settings → SSH & SFTP.
-      # SFTP_REMOTE_DIR ist der Webroot der (Sub-)Domain, z. B. webroots/5dfa4a5d (siehe Control Panel → Subdomains).
+      # REMOTE_DIR ist der Webroot der Testdomain test.rollshausen.com (one.com → Subdomains → Folder).
+      # Für den Relaunch auf smilesafricacharity.com hier den Webroot der echten Domain eintragen.
       - name: Upload via SFTP
         env:
           HOST: ${{ secrets.SFTP_HOST }}
           PORT: ${{ secrets.SFTP_PORT || '22' }}
           USER: ${{ secrets.SFTP_USERNAME }}
           PASS: ${{ secrets.SFTP_PASSWORD }}
-          REMOTE_DIR: ${{ secrets.SFTP_REMOTE_DIR }}
+          REMOTE_DIR: webroots/311d3ddd
         run: |
           if [ -z "$HOST" ] || [ -z "$USER" ] || [ -z "$PASS" ] || [ -z "$REMOTE_DIR" ]; then
-            echo "::error::SFTP-Secrets fehlen (SFTP_HOST, SFTP_USERNAME, SFTP_PASSWORD, SFTP_REMOTE_DIR)"
+            echo "::error::SFTP-Secrets fehlen (SFTP_HOST, SFTP_USERNAME, SFTP_PASSWORD)"
             exit 1
           fi
           sudo apt-get install -y -qq lftp > /dev/null
@@ -61,7 +62,8 @@ jobs:
               set sftp:auto-confirm yes;
               echo '--- Startordner:'; pwd; cls -la;
               echo '--- webroots:'; cls -la webroots/;
-              echo '--- Routen:'; cls -la webroots/by-route/; echo '--- 311d3ddd:'; cls -la webroots/311d3ddd/;
+              echo '--- Routen:'; cls -la webroots/by-route/;
+              echo '--- Zielordner:'; cls -la '$REMOTE_DIR/';
               bye" || true
             exit 0
           fi
