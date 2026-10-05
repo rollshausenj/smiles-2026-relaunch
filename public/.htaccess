@@ -1,0 +1,5 @@
+# Testphase: Suchmaschinen sollen nichts indexieren – gilt für alle Dateien (HTML, Bilder, PDFs).
+# Zum Relaunch entfernen und INDEXING in src/config.ts auf true setzen.
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow, noarchive"
+</IfModule>
