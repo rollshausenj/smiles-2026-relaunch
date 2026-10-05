@@ -1,0 +1,296 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StillHero from '../components/StillHero.astro';
+import Todo from '../components/Todo.astro';
+import { url, type Lang } from '../i18n/ui';
+import still from '../assets/stills/haende-waschen.jpg';
+import recycling from '../assets/hygiene/recycling.jpg';
+import komplett from '../assets/hygiene/komplettsystem.jpg';
+import mini from '../assets/hygiene/mini-kanister.jpg';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+// Grundlage: Seite „Waterstations“ der alten Website (April 2020), Bericht von Kizito aus dem Team in Nairobi.
+const c = {
+  de: {
+    label: 'Abgeschlossenes Projekt · 2020',
+    title: 'Wasser',
+    highlight: 'gegen Corona.',
+    lead: 'Abstand halten und zu Hause bleiben funktioniert im Slum nicht. Deshalb haben wir 2020 in Korogocho Wasserstationen zum Händewaschen aufgebaut.',
+    stats: [
+      ['300.000+', 'Menschen in Korogocho'],
+      ['8', 'Personen teils in einem Raum'],
+      ['20 €', 'für eine Station inkl. Betrieb'],
+    ],
+    whyLabel: '01 — Die Lage',
+    whyTitle: 'Hygiene als einzige Chance',
+    why: [
+      'Über 300.000 Menschen leben in Korogocho auf engstem Raum, teilweise zu acht in einem einzigen Raum. Social Distancing oder Homeoffice sind dort keine Option – die tägliche Arbeit ist überlebensnotwendig.',
+      'Die wirksamste Maßnahme gegen die Ausbreitung des Virus ist regelmäßiges Händewaschen. Doch Wasser ist knapp, und es gab viel zu wenige Wasserstellen für die Größe der Gemeinde.',
+    ],
+    howLabel: '02 — Drei Lösungen',
+    howIntro: 'Unser Team vor Ort hat verschiedene Methoden getestet. Kizito hat den Verlauf für uns dokumentiert:',
+    options: [
+      {
+        img: recycling,
+        alt: 'Ein Mann bearbeitet einen gelben Kunststoffkanister',
+        tag: 'Recycling',
+        title: 'Behälter aus Plastikmüll',
+        quote: 'Unser ursprünglicher Plan war, Kunststoff zu recyceln und Wasserbehälter mit 50 bis 150 Litern herzustellen. So entstehen Arbeitsplätze für Leute, die die Behälter bauen, und für Künstler, die sie gestalten. Die Herausforderung: sie haltbar zu machen.',
+        verdict: 'Gute Idee, braucht aber noch viel Zeit und Forschung.',
+      },
+      {
+        img: komplett,
+        alt: 'Große schwarze Wassertonne mit der Aufschrift „Wash your hands here“',
+        tag: 'Komplettsystem',
+        title: 'Große Wassertonnen',
+        quote: 'Die nächste Idee: große neue oder gebrauchte, langlebige Behälter kaufen und anpassen. Das geht schneller als Recycling, ist aber teuer, wenn man viele Wasserstellen bauen will.',
+        verdict: 'Schnell umsetzbar, aber zu teuer für viele Stationen.',
+      },
+      {
+        img: mini,
+        alt: 'Ein Kind wäscht sich an einer Station aus gelben Kanistern die Hände',
+        tag: 'Mini-Kanister',
+        title: 'Kanister im Verbund',
+        quote: 'Wir verbinden kleinere 20-Liter-Kanister zu einem Waterpoint mit 60 bis 100 Litern. Die Höhe lässt sich anpassen, damit sich auch Kinder die Hände waschen können. Ein Kanister kostet 120 KES, ein ganzer Waterpoint mit Installation rund 1.800 KES.',
+        verdict: 'Günstig, schnell gebaut, kindgerecht – unser Favorit.',
+      },
+    ],
+    planLabel: '03 — Der Plan',
+    plan: 'Möglichst viele Wasserstellen über Korogocho verteilen, sodass die Menschen auf ihren täglichen Wegen immer wieder daran vorbeikommen und ans Händewaschen erinnert werden.',
+    kes: '1.800 KES ≈ 15,50 € pro Waterpoint (Stand April 2020)',
+    todo: 'Ergebnis ergänzen: Wie viele Stationen wurden gebaut, wie lange liefen sie, was hat das Team gelernt?',
+    back: 'Zurück zum Projekt',
+  },
+  en: {
+    label: 'Completed project · 2020',
+    title: 'Water',
+    highlight: 'against Covid.',
+    lead: 'Social distancing and staying at home don’t work in a slum. So in 2020 we set up hand-washing stations in Korogocho.',
+    stats: [
+      ['300,000+', 'people in Korogocho'],
+      ['8', 'people sometimes in one room'],
+      ['€20', 'for one station incl. running it'],
+    ],
+    whyLabel: '01 — The situation',
+    whyTitle: 'Hygiene as the only chance',
+    why: [
+      'More than 300,000 people live in Korogocho in very tight spaces, sometimes eight to a room. Social distancing or working from home are not options – daily work is essential for survival.',
+      'The most effective measure against the virus is regular hand-washing. But water is scarce, and there were far too few water points for the size of the community.',
+    ],
+    howLabel: '02 — Three solutions',
+    howIntro: 'Our local team tested different methods. Kizito documented the process for us:',
+    options: [
+      {
+        img: recycling,
+        alt: 'A man working on a yellow plastic container',
+        tag: 'Recycling',
+        title: 'Containers from plastic waste',
+        quote: 'Our original plan was to recycle plastic and make water containers holding 50 to 150 litres. That creates jobs for the people who build them and for artists who decorate them. The challenge: making them durable.',
+        verdict: 'A good idea, but it needs much more time and research.',
+      },
+      {
+        img: komplett,
+        alt: 'Large black water drum labelled “Wash your hands here”',
+        tag: 'Complete system',
+        title: 'Large water drums',
+        quote: 'The next idea: buy large new or used durable containers and adapt them. Faster than recycling, but expensive if you want many water points.',
+        verdict: 'Quick to set up, but too expensive for many stations.',
+      },
+      {
+        img: mini,
+        alt: 'A child washing hands at a station made of yellow jerrycans',
+        tag: 'Mini jerrycans',
+        title: 'Linked jerrycans',
+        quote: 'We connect smaller 20-litre jerrycans into one water point holding 60 to 100 litres. The height can be adjusted so children can wash their hands too. One jerrycan costs 120 KES, a full water point incl. installation about 1,800 KES.',
+        verdict: 'Cheap, quick to build, child-friendly – our favourite.',
+      },
+    ],
+    planLabel: '03 — The plan',
+    plan: 'Spread as many water points across Korogocho as possible, so people pass them on their daily routes and are reminded to wash their hands.',
+    kes: '1,800 KES ≈ €15.50 per water point (April 2020)',
+    todo: 'Add the outcome: how many stations were built, how long they ran, what the team learned.',
+    back: 'Back to the project',
+  },
+}[lang];
+---
+
+<BaseLayout lang={lang} title="Hygiene" routeKey="hygiene">
+  <StillHero image={still} focus="center 40%" label={c.label} title={c.title} highlight={c.highlight} lead={c.lead} />
+
+  <section class="section">
+    <div class="container">
+      <div class="stats" data-reveal>
+        {
+          c.stats.map(([n, text]) => (
+            <div>
+              <strong>{n}</strong>
+              <span>{text}</span>
+            </div>
+          ))
+        }
+      </div>
+      <div class="split">
+        <div data-reveal>
+          <p class="label">{c.whyLabel}</p>
+          <h2>{c.whyTitle}</h2>
+        </div>
+        <div data-reveal>
+          {c.why.map((p) => <p class="lead">{p}</p>)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <p class="label" data-reveal>{c.howLabel}</p>
+      <p class="lead" data-reveal>{c.howIntro}</p>
+      <div class="options">
+        {
+          c.options.map((o, i) => (
+            <article class:list={['option', { best: i === 2 }]} data-reveal>
+              <Image src={o.img} alt={o.alt} widths={[500, 900]} sizes="(min-width: 1000px) 33vw, 100vw" />
+              <div class="body">
+                <span class="tag">0{i + 1} / {o.tag}</span>
+                <h3>{o.title}</h3>
+                <blockquote>„{o.quote}“</blockquote>
+                <p class="verdict">{o.verdict}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split">
+      <p class="label" data-reveal>{c.planLabel}</p>
+      <div data-reveal>
+        <p class="plan">{c.plan}</p>
+        <p class="kes">{c.kes}</p>
+        <Todo>{c.todo}</Todo>
+        <div class="actions">
+          <a class="btn btn--accent" href={url('donate', lang)}>{lang === 'de' ? 'Jetzt spenden' : 'Donate now'} <span class="arrow">→</span></a>
+          <a class="btn" href={url('project', lang)}>← {c.back}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-block: 1px solid var(--line);
+    margin-bottom: 80px;
+  }
+
+  .stats div {
+    padding: 28px 16px 28px 0;
+  }
+
+  .stats div + div {
+    border-left: 1px solid var(--line);
+    padding-left: clamp(16px, 3vw, 32px);
+  }
+
+  .stats strong {
+    display: block;
+    font-family: var(--display);
+    font-size: clamp(1.8rem, 5.5vw, 4.2rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--accent);
+  }
+
+  .stats span {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .options {
+    display: grid;
+    gap: 20px;
+    margin-top: 40px;
+  }
+
+  @media (min-width: 1000px) {
+    .options {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .option {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  .option.best {
+    border-color: rgb(238 226 6 / 0.6);
+    box-shadow: 0 0 60px -20px rgb(238 226 6 / 0.35);
+  }
+
+  .option img {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 24px 28px 28px;
+  }
+
+  .tag {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  blockquote {
+    margin: 0 0 20px;
+    color: var(--muted);
+    font-size: 0.92rem;
+    flex: 1;
+  }
+
+  .verdict {
+    margin: 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+
+  .best .verdict {
+    color: var(--accent);
+  }
+
+  .plan {
+    font-family: var(--display);
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .kes {
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+</style>

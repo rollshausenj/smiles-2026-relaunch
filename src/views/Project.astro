@@ -6,7 +6,8 @@ import still from '../assets/stills/korogocho-gasse.jpg';
 import Todo from '../components/Todo.astro';
 import { t, url, type Lang } from '../i18n/ui';
 import korogocho from '../assets/img/korogocho.jpg';
-import hygiene from '../assets/img/hygiene.jpg';
+import digitalImg from '../assets/stills/digital-laptop.jpg';
+import hygieneImg from '../assets/stills/haende-waschen.jpg';
 
 interface Props {
   lang: Lang;
@@ -41,8 +42,8 @@ const c = {
     pathTodo: 'Vom Team in Kenia gegenlesen lassen; aktuelle Zahl der Stipendiat:innen je Stufe ergänzen.',
     archiveLabel: '04 — Abgeschlossen',
     archive: [
-      { title: 'Digital Empowerment', year: '2020', text: 'Website-Workshop mit jungen Erwachsenen aus Korogocho.', href: url('digital', lang) },
-      { title: 'Hygiene', year: '2020', text: 'Wasserstationen und Aufklärung zum Händewaschen in Korogocho.' },
+      { title: 'Digital Empowerment', year: '2020', text: 'Website-Workshop mit jungen Erwachsenen aus Korogocho.', href: url('digital', lang), img: digitalImg, alt: 'Zwei junge Männer arbeiten an einem Laptop in Korogocho' },
+      { title: 'Hygiene', year: '2020', text: 'Wasserstationen zum Händewaschen in Korogocho – unsere Antwort auf Corona.', href: url('hygiene', lang), img: hygieneImg, alt: 'Wasserstation zum Händewaschen auf einem Markt in Korogocho' },
     ],
   },
   en: {
@@ -72,8 +73,8 @@ const c = {
     pathTodo: 'Have the Kenyan team review; add current number of scholars per level.',
     archiveLabel: '04 — Completed',
     archive: [
-      { title: 'Digital Empowerment', year: '2020', text: 'Website workshop with young adults from Korogocho.', href: url('digital', lang) },
-      { title: 'Hygiene', year: '2020', text: 'Water stations and hand-washing awareness in Korogocho.' },
+      { title: 'Digital Empowerment', year: '2020', text: 'Website workshop with young adults from Korogocho.', href: url('digital', lang), img: digitalImg, alt: 'Two young men working on a laptop in Korogocho' },
+      { title: 'Hygiene', year: '2020', text: 'Hand-washing stations in Korogocho – our response to Covid-19.', href: url('hygiene', lang), img: hygieneImg, alt: 'Hand-washing station at a market in Korogocho' },
     ],
   },
 }[lang];
@@ -144,25 +145,20 @@ const c = {
       <p class="label" data-reveal>{c.archiveLabel}</p>
       <div class="archive">
         {
-          c.archive.map((a, i) =>
-            a.href ? (
-              <a class="card item" href={a.href} data-reveal>
+          c.archive.map((a) => (
+            <a class="item" href={a.href} data-reveal>
+              <div class="frame">
+                <Image src={a.img} alt={a.alt} widths={[500, 900]} sizes="(min-width: 800px) 50vw, 100vw" />
+              </div>
+              <div class="meta">
                 <span class="year">{a.year}</span>
                 <h3>{a.title} ↗</h3>
                 <p>{a.text}</p>
-              </a>
-            ) : (
-              <div class="card item with-img" data-reveal>
-                <span class="year">{a.year}</span>
-                <h3>{a.title}</h3>
-                <p>{a.text}</p>
-                {i === 1 && <Image src={hygiene} alt="" widths={[400, 700]} sizes="(min-width: 800px) 40vw, 100vw" class="mini" />}
               </div>
-            ),
-          )
+            </a>
+          ))
         }
       </div>
-      <Todo>{lang === 'de' ? 'Hygiene-Projekt: Zeitraum und Beschreibung vom Team bestätigen.' : 'Hygiene project: confirm time frame and description with the team.'}</Todo>
     </div>
   </section>
 </BaseLayout>
@@ -296,11 +292,25 @@ const c = {
 
   .item {
     display: block;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    overflow: hidden;
     transition: border-color 0.3s;
   }
 
-  a.item:hover {
+  .item:hover {
     border-color: rgb(238 226 6 / 0.5);
+  }
+
+  .frame img {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+
+  .meta {
+    padding: 24px 28px 28px;
   }
 
   .item p {
@@ -313,14 +323,6 @@ const c = {
     font-family: var(--mono);
     font-size: 0.75rem;
     color: var(--accent);
-    margin-bottom: 24px;
-  }
-
-  .mini {
-    margin-top: 24px;
-    width: 100%;
-    aspect-ratio: 16 / 7;
-    object-fit: cover;
-    border-radius: 14px;
+    margin-bottom: 12px;
   }
 </style>

@@ -10,6 +10,8 @@ interface Props {
 
 const { lang, current } = Astro.props;
 const other: Lang = lang === 'de' ? 'en' : 'de';
+// Digital Empowerment und Hygiene sind Unterseiten von „Projekt“
+const section: RouteKey = current === 'digital' || current === 'hygiene' ? 'project' : current;
 ---
 
 <header class="site-header">
@@ -22,7 +24,7 @@ const other: Lang = lang === 'de' ? 'en' : 'de';
     <nav class="desktop" aria-label={lang === 'de' ? 'Hauptnavigation' : 'Main navigation'}>
       {
         nav.map((item) => (
-          <a href={url(item.key, lang)} aria-current={item.key === current ? 'page' : undefined}>
+          <a href={url(item.key, lang)} aria-current={item.key === section ? 'page' : undefined}>
             {item.label[lang]}
           </a>
         ))
