@@ -34,3 +34,14 @@ git push
 ```
 
 Den Status siehst du im Repo unter **Actions**.
+
+## Relaunch smilesafricacharity.com
+
+- Requirements-Dokument (lebendes Dokument): https://claude.ai/code/artifact/4691d909-567c-43ef-bd10-1d89bcb6cd00
+- `assets/smilesafrica/`: gesicherte Medien der alten Website (Stand 05.10.2026)
+  - `bilder/`: 139 Bilder aus der WordPress-Mediathek (Originalgröße)
+  - `instagram/`: 11 Bilder der neuesten Instagram-Beiträge von @smilesafricacharity_de
+  - `youtube-links.md`: 10 eingebettete YouTube-Videos mit Fundstelle
+  - `media.tsv`, `bild_urls.txt`: Index der Mediathek (Datum, Typ, URL, Alt-Text)
+
+`assets/` liegt außerhalb von `public/` und wird deshalb nicht hochgeladen.
