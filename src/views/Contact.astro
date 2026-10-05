@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import { links, org, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const de = lang === 'de';
+---
+
+<BaseLayout lang={lang} title={de ? 'Kontakt' : 'Contact'} routeKey="contact">
+  <PageIntro
+    label={de ? 'Kontakt' : 'Contact'}
+    title={de ? 'Sprich' : 'Say'}
+    highlight={de ? 'uns an.' : 'hello.'}
+    lead={de ? 'Fragen zu Spenden, Kooperationen oder Presse? Schreib uns – wir melden uns.' : 'Questions about donations, partnerships or press? Drop us a line.'}
+  >
+    <a class="mail" href={`mailto:${links.email}`}>{links.email} <span class="accent">↗</span></a>
+  </PageIntro>
+
+  <section class="section">
+    <div class="container places">
+      <div class="card" data-reveal>
+        <p class="label">{de ? 'Deutschland' : 'Germany'}</p>
+        <p class="addr">{org.name}<br />{org.street}<br />{org.city}</p>
+        <a class="link" href={links.instagramDe} rel="noopener">@smilesafricacharity_de ↗</a>
+      </div>
+      <div class="card" data-reveal>
+        <p class="label">{de ? 'Kenia' : 'Kenya'}</p>
+        <p class="addr">{org.kenya.name}<br />{org.kenya.contact}<br />{org.kenya.address}</p>
+        <a class="link" href={links.instagramKe} rel="noopener">@smilesafricacharity_ke ↗</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .mail {
+    display: inline-block;
+    margin-top: 1rem;
+    font-size: clamp(1.4rem, 4.5vw, 3rem);
+    font-weight: 700;
+    font-stretch: 112%;
+    letter-spacing: -0.02em;
+    border-bottom: 2px solid var(--line);
+    transition: border-color 0.3s;
+    word-break: break-word;
+  }
+
+  .mail:hover {
+    border-color: var(--accent);
+  }
+
+  .places {
+    display: grid;
+    gap: 20px;
+  }
+
+  @media (min-width: 800px) {
+    .places {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .addr {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+</style>

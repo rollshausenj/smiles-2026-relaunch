@@ -6,98 +6,119 @@ interface Props {
 }
 
 const { lang } = Astro.props;
+const de = lang === 'de';
 const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
-  <div class="container cols">
-    <div>
-      <p class="claim display">{t(lang, 'site.claim')}</p>
-      <a class="btn btn--primary" href={url('donate', lang)}>{t(lang, 'cta.donate')}</a>
+  <div class="container">
+    <a class="big" href={url('donate', lang)}>
+      <span>{de ? 'Gleiche Chancen' : 'Equal chances'}</span>
+      <span class="accent">{de ? 'für alle Kinder →' : 'for every child →'}</span>
+    </a>
+
+    <div class="cols">
+      <div>
+        <p class="label">{t(lang, 'footer.contactDe')}</p>
+        <p>{org.name}<br />{org.street}<br />{org.city}</p>
+        <a class="link" href={`mailto:${links.email}`}>{links.email}</a>
+      </div>
+      <div>
+        <p class="label">{t(lang, 'footer.contactKe')}</p>
+        <p>{org.kenya.name}<br />{org.kenya.contact}<br />{org.kenya.address}</p>
+      </div>
+      <div>
+        <p class="label">{t(lang, 'footer.bank')}</p>
+        <p class="mono">{org.iban}<br />BIC {org.bic}</p>
+      </div>
+      <div>
+        <p class="label">{t(lang, 'footer.follow')}</p>
+        <ul>
+          <li><a href={links.instagramDe} rel="noopener">Instagram DE ↗</a></li>
+          <li><a href={links.instagramKe} rel="noopener">Instagram KE ↗</a></li>
+          <li><a href={links.facebook} rel="noopener">Facebook ↗</a></li>
+        </ul>
+      </div>
     </div>
-    <div>
-      <h2>{t(lang, 'footer.contactDe')}</h2>
-      <p>
-        {org.name}<br />
-        {org.street}<br />
-        {org.city}<br />
-        <a href={`mailto:${links.email}`}>{links.email}</a>
-      </p>
+
+    <div class="legal">
+      <span>© {year} {org.name}</span>
+      <span class="spacer"></span>
+      <a href={url('imprint', lang)}>{de ? 'Impressum' : 'Imprint'}</a>
+      <a href={url('privacy', lang)}>{de ? 'Datenschutz' : 'Privacy'}</a>
     </div>
-    <div>
-      <h2>{t(lang, 'footer.contactKe')}</h2>
-      <p>
-        {org.kenya.name}<br />
-        {org.kenya.contact}<br />
-        {org.kenya.address}
-      </p>
-    </div>
-    <div>
-      <h2>{t(lang, 'footer.bank')}</h2>
-      <p>
-        {org.name}<br />
-        IBAN: {org.iban}<br />
-        BIC: {org.bic}
-      </p>
-      <h2>{t(lang, 'footer.follow')}</h2>
-      <ul class="social">
-        <li><a href={links.instagramDe} rel="noopener">Instagram DE</a></li>
-        <li><a href={links.instagramKe} rel="noopener">Instagram KE</a></li>
-        <li><a href={links.facebook} rel="noopener">Facebook</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="container legal">
-    <span>© {year} {org.name}</span>
-    <a href={url('imprint', lang)}>{lang === 'de' ? 'Impressum' : 'Imprint'}</a>
-    <a href={url('privacy', lang)}>{lang === 'de' ? 'Datenschutz' : 'Privacy'}</a>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    background: var(--black);
-    color: #e8e8e8;
-    padding-top: clamp(48px, 7vw, 80px);
+    border-top: 1px solid var(--line);
+    padding-top: clamp(64px, 10vw, 128px);
+    color: var(--muted);
     font-size: 0.95rem;
+  }
+
+  .big {
+    display: flex;
+    flex-direction: column;
+    font-size: clamp(2.2rem, 7vw, 5.5rem);
+    font-weight: 800;
+    font-stretch: 125%;
+    text-transform: uppercase;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: clamp(48px, 8vw, 96px);
+  }
+
+  .big:hover .accent {
+    text-decoration: underline;
+    text-decoration-thickness: 4px;
+    text-underline-offset: 8px;
   }
 
   .cols {
     display: grid;
     gap: 32px;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
   }
 
-  .claim {
-    color: var(--yellow);
-    font-size: 1.6rem;
-    margin-bottom: 1rem;
+  .cols a:hover {
+    color: var(--text);
   }
 
-  h2 {
+  .label {
+    margin-bottom: 0.75rem;
+  }
+
+  .mono {
+    font-family: var(--mono);
     font-size: 0.85rem;
-    letter-spacing: 0.08em;
-    color: var(--yellow);
-    margin-bottom: 0.6em;
   }
 
-  .social {
+  ul {
     list-style: none;
-    padding: 0;
     margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 16px;
+    padding: 0;
+    line-height: 2;
   }
 
   .legal {
     display: flex;
     flex-wrap: wrap;
     gap: 8px 24px;
-    margin-top: 40px;
+    margin-top: 64px;
     padding-block: 24px;
-    border-top: 1px solid #2c2c2c;
-    font-size: 0.85rem;
-    color: #b5b5b5;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  .legal a:hover {
+    color: var(--text);
   }
 </style>

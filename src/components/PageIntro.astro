@@ -1,0 +1,47 @@
+---
+interface Props {
+  label: string;
+  title: string;
+  /** Wird gelb hervorgehoben und an den Titel angehängt */
+  highlight?: string;
+  lead?: string;
+}
+const { label, title, highlight, lead } = Astro.props;
+---
+
+<section class="intro">
+  <div class="glow" aria-hidden="true"></div>
+  <div class="container">
+    <p class="label" data-reveal>{label}</p>
+    <h1 data-reveal>{title}{highlight && <><br /><span class="accent">{highlight}</span></>}</h1>
+    {lead && <p class="lead" data-reveal>{lead}</p>}
+    <div data-reveal><slot /></div>
+  </div>
+</section>
+
+<style>
+  .intro {
+    position: relative;
+    padding-block: clamp(150px, 20vw, 220px) clamp(64px, 9vw, 112px);
+    overflow: hidden;
+  }
+
+  .glow {
+    position: absolute;
+    width: 50vmax;
+    height: 50vmax;
+    right: -20vmax;
+    top: -25vmax;
+    background: radial-gradient(circle, rgb(238 226 6 / 0.16), transparent 60%);
+    filter: blur(40px);
+    pointer-events: none;
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 7.5vw, 6rem);
+  }
+
+  .container {
+    position: relative;
+  }
+</style>

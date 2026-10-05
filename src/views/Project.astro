@@ -1,0 +1,325 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Todo from '../components/Todo.astro';
+import { t, url, type Lang } from '../i18n/ui';
+import korogocho from '../assets/img/korogocho.jpg';
+import hygiene from '../assets/img/hygiene.jpg';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+const c = {
+  de: {
+    label: 'Das Projekt',
+    title: 'Qualitative',
+    highlight: 'Bildung',
+    lead: 'Stipendien und Mentoring für Kinder und Jugendliche aus Korogocho, einem der größten Slums Nairobis – so lange, bis ihr Bildungsweg abgeschlossen ist.',
+    principlesLabel: '01 — Grundsätze',
+    principles: [
+      ['Qualität vor Quantität', 'Lieber weniger Kinder richtig fördern – an Schulen mit qualifizierten Lehrkräften.'],
+      ['Bedingungslos', 'Wir fördern unabhängig von Noten und suchen mit den Familien nach Lösungen.'],
+      ['Bis zum Abschluss', 'Langfristige Finanzierung statt Risiko – von der Grundschule bis zur Uni.'],
+      ['Von innen heraus', 'Gegründet von Menschen, die selbst in Korogocho aufgewachsen sind.'],
+    ],
+    howLabel: '02 — So funktioniert’s',
+    scholarshipTitle: 'Scholarship',
+    scholarship: 'Staatliche Schulen sind teilweise gebührenfrei – Uniform, Bücher, Material und Mittagessen aber nicht. In den Slums fehlen zudem staatliche Schulen. Wir bringen unsere Stipendiat:innen an Schulen mit guten Lehrkräften und übernehmen die Kosten.',
+    mentorshipTitle: 'Mentorship',
+    mentorship: 'Das Team in Nairobi begleitet jede:n Stipendiat:in persönlich – auch bei Themen jenseits der Schule. Die Mentor:innen kennen die Herausforderungen aus eigener Erfahrung.',
+    pathLabel: '03 — Der Bildungsweg',
+    path: [
+      ['Grundschule', 'Uniform, Bücher, Material'],
+      ['Sekundarstufe', 'Klasse 7–12'],
+      ['Internat', 'Mahlzeiten, Bett, Ruhe zum Lernen'],
+      ['Uni / Ausbildung', 'Meist drei Jahre Studium'],
+    ],
+    pathTodo: 'Vom Team in Kenia gegenlesen lassen; aktuelle Zahl der Stipendiat:innen je Stufe ergänzen.',
+    archiveLabel: '04 — Abgeschlossen',
+    archive: [
+      { title: 'Digital Empowerment', year: '2020', text: 'Website-Workshop mit jungen Erwachsenen aus Korogocho.', href: url('digital', lang) },
+      { title: 'Hygiene', year: '2020', text: 'Wasserstationen und Aufklärung zum Händewaschen in Korogocho.' },
+    ],
+  },
+  en: {
+    label: 'The project',
+    title: 'Quality',
+    highlight: 'education',
+    lead: 'Scholarships and mentoring for children and young people from Korogocho, one of Nairobi’s largest informal settlements – until they complete their education.',
+    principlesLabel: '01 — Principles',
+    principles: [
+      ['Quality over quantity', 'Supporting fewer children properly – at schools with qualified teachers.'],
+      ['Unconditional', 'We support scholars regardless of grades and find solutions together with families.'],
+      ['Until graduation', 'Long-term funding instead of risk – from primary school to university.'],
+      ['From within', 'Founded by people who grew up in Korogocho themselves.'],
+    ],
+    howLabel: '02 — How it works',
+    scholarshipTitle: 'Scholarship',
+    scholarship: 'Public schools are partly free – uniforms, books, materials and lunch are not. And there are hardly any public schools in the slums. We place our scholars at schools with good teachers and cover the costs.',
+    mentorshipTitle: 'Mentorship',
+    mentorship: 'The team in Nairobi mentors every scholar personally – including on topics beyond school. The mentors know the challenges first-hand.',
+    pathLabel: '03 — The path',
+    path: [
+      ['Primary school', 'Uniform, books, materials'],
+      ['Secondary school', 'Grades 7–12'],
+      ['Boarding school', 'Meals, a bed, room to learn'],
+      ['University / training', 'Usually three years of study'],
+    ],
+    pathTodo: 'Have the Kenyan team review; add current number of scholars per level.',
+    archiveLabel: '04 — Completed',
+    archive: [
+      { title: 'Digital Empowerment', year: '2020', text: 'Website workshop with young adults from Korogocho.', href: url('digital', lang) },
+      { title: 'Hygiene', year: '2020', text: 'Water stations and hand-washing awareness in Korogocho.' },
+    ],
+  },
+}[lang];
+---
+
+<BaseLayout lang={lang} title={`${c.title} ${c.highlight}`} routeKey="project">
+  <PageIntro label={c.label} title={c.title} highlight={c.highlight} lead={c.lead}>
+    <div class="actions">
+      <a class="btn btn--accent" href={url('donate', lang)}>{t(lang, 'cta.donate')} <span class="arrow">→</span></a>
+    </div>
+  </PageIntro>
+
+  <section class="section">
+    <div class="container">
+      <p class="label" data-reveal>{c.principlesLabel}</p>
+      <div class="principles">
+        {
+          c.principles.map(([title, text], i) => (
+            <div class="principle" data-reveal>
+              <span class="num">0{i + 1}</span>
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split">
+      <div data-reveal>
+        <p class="label">{c.howLabel}</p>
+        <Image src={korogocho} alt="Korogocho, Nairobi" widths={[500, 900, 1300]} sizes="(min-width: 900px) 40vw, 100vw" class="photo tall" />
+      </div>
+      <div class="how">
+        <div data-reveal>
+          <h2>{c.scholarshipTitle}</h2>
+          <p class="lead">{c.scholarship}</p>
+        </div>
+        <div data-reveal>
+          <h2>{c.mentorshipTitle}</h2>
+          <p class="lead">{c.mentorship}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <p class="label" data-reveal>{c.pathLabel}</p>
+      <ol class="path" data-reveal>
+        {
+          c.path.map(([title, text]) => (
+            <li>
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <Todo>{c.pathTodo}</Todo>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <p class="label" data-reveal>{c.archiveLabel}</p>
+      <div class="archive">
+        {
+          c.archive.map((a, i) =>
+            a.href ? (
+              <a class="card item" href={a.href} data-reveal>
+                <span class="year">{a.year}</span>
+                <h3>{a.title} ↗</h3>
+                <p>{a.text}</p>
+              </a>
+            ) : (
+              <div class="card item with-img" data-reveal>
+                <span class="year">{a.year}</span>
+                <h3>{a.title}</h3>
+                <p>{a.text}</p>
+                {i === 1 && <Image src={hygiene} alt="" widths={[400, 700]} sizes="(min-width: 800px) 40vw, 100vw" class="mini" />}
+              </div>
+            ),
+          )
+        }
+      </div>
+      <Todo>{lang === 'de' ? 'Hygiene-Projekt: Zeitraum und Beschreibung vom Team bestätigen.' : 'Hygiene project: confirm time frame and description with the team.'}</Todo>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .principles {
+    display: grid;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  @media (min-width: 700px) {
+    .principles {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .principles {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .principle {
+    background: var(--bg);
+    padding: 32px 28px;
+  }
+
+  .principle p {
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .num {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+    margin-bottom: 40px;
+  }
+
+  .tall {
+    aspect-ratio: 4 / 5;
+  }
+
+  .how {
+    display: grid;
+    gap: 56px;
+  }
+
+  .path {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+    counter-reset: step;
+  }
+
+  @media (min-width: 800px) {
+    .path {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .path li {
+    position: relative;
+    counter-increment: step;
+    padding: 56px 24px 0 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .path li::before {
+    content: '0' counter(step);
+    position: absolute;
+    top: 16px;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+  }
+
+  .path li::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 0;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+  }
+
+  .path p {
+    color: var(--muted);
+  }
+
+  @media (max-width: 799px) {
+    .path li {
+      padding: 0 0 32px 32px;
+      border-top: 0;
+      border-left: 1px solid var(--line);
+    }
+
+    .path li::before {
+      position: static;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .path li::after {
+      top: 0;
+      left: -5px;
+    }
+  }
+
+  .archive {
+    display: grid;
+    gap: 20px;
+  }
+
+  @media (min-width: 800px) {
+    .archive {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+  }
+
+  .item {
+    display: block;
+    transition: border-color 0.3s;
+  }
+
+  a.item:hover {
+    border-color: rgb(238 226 6 / 0.5);
+  }
+
+  .item p {
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .year {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+
+  .mini {
+    margin-top: 24px;
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+    border-radius: 14px;
+  }
+</style>

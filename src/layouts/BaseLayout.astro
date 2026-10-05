@@ -9,16 +9,13 @@ interface Props {
   title?: string;
   description?: string;
   /** Schlüssel aus routes – sorgt für hreflang und den Sprachumschalter. */
-  routeKey?: RouteKey;
-  /** Für Seiten ohne Gegenstück in der anderen Sprache (z. B. Blogbeiträge). */
-  alternates?: Partial<Record<Lang, string>>;
+  routeKey: RouteKey;
 }
 
-const { lang, title, description = t(lang, 'site.description'), routeKey, alternates } = Astro.props;
+const { lang, title, description = t(lang, 'site.description'), routeKey } = Astro.props;
 const siteTitle = t(lang, 'site.title');
 const fullTitle = title ? `${title} – ${siteTitle}` : `${siteTitle} – ${t(lang, 'site.claim')}`;
-
-const alt: Partial<Record<Lang, string>> = alternates ?? (routeKey ? routes[routeKey] : {});
+const alt = routes[routeKey];
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
@@ -30,24 +27,50 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {
-      (Object.keys(languages) as Lang[])
-        .filter((l) => alt[l])
-        .map((l) => <link rel="alternate" hreflang={l} href={new URL(alt[l]!, Astro.site)} />)
-    }
+    {(Object.keys(languages) as Lang[]).map((l) => <link rel="alternate" hreflang={l} href={new URL(alt[l], Astro.site)} />)}
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content={lang === 'de' ? 'de_DE' : 'en_GB'} />
-    <meta name="theme-color" content="#111111" />
+    <meta name="theme-color" content="#0b0b0c" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
   <body>
     <a class="skip-link" href="#main">{t(lang, 'nav.skip')}</a>
-    <Header lang={lang} alternates={alt} current={routeKey} />
+    <Header lang={lang} current={routeKey} />
     <main id="main">
       <slot />
     </main>
     <Footer lang={lang} />
+
+    <script>
+      // Elemente mit data-reveal blenden beim Scrollen weich ein.
+      // Alles, was oberhalb der Unterkante liegt, wird gezeigt – auch nach Sprüngen (Anker, Zurück-Taste).
+      let pending = [...document.querySelectorAll<HTMLElement>('[data-reveal]')];
+      const reveal = () => {
+        const limit = window.innerHeight * 0.92;
+        pending = pending.filter((el) => {
+          if (el.getBoundingClientRect().top < limit) {
+            el.classList.add('is-visible');
+            return false;
+          }
+          return true;
+        });
+        if (!pending.length) window.removeEventListener('scroll', onScroll);
+      };
+      let ticking = false;
+      const onScroll = () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          reveal();
+          ticking = false;
+        });
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+      reveal();
+    </script>
   </body>
 </html>

@@ -1,8 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageHero from '../components/PageHero.astro';
+import PageIntro from '../components/PageIntro.astro';
 import Todo from '../components/Todo.astro';
-import { links, org, url, type Lang } from '../i18n/ui';
+import { links, org, type Lang } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
@@ -11,152 +11,215 @@ const { lang } = Astro.props;
 
 const c = {
   de: {
-    title: 'Spenden',
-    heroTitle: 'Schenk Zukunft',
-    lead: 'Mit deiner Spende finanzierst du Schulgebühren, Material und Mentoring für Kinder und Jugendliche aus Korogocho – bis zum Abschluss ihres Bildungswegs.',
-    cta: 'Jetzt über betterplace spenden',
-    ctaNote: 'Einmalig oder als Dauerspende. Die Zuwendungsbestätigung erhältst du automatisch über betterplace.org.',
-    impactTitle: 'Was deine Spende bewirkt',
-    impact: [
-      { amount: '10 €', text: 'Schreibpapier für eine:n Schüler:in der Sekundarstufe – für ein ganzes Jahr.' },
-    ],
-    impactTodo: 'Weitere belegte Beispielbeträge (z. B. Schuluniform, Schulgebühren pro Term, Internat) vom Vorstand.',
-    bankTitle: 'Lieber per Überweisung?',
-    bankText: 'Überweise direkt auf unser Vereinskonto. Für eine Zuwendungsbestätigung gib bitte deine Adresse im Verwendungszweck an oder schreib uns.',
-    faqTitle: 'Häufige Fragen',
+    label: 'Spenden',
+    title: 'Schenk',
+    highlight: 'Zukunft.',
+    lead: 'Deine Spende finanziert Schulgebühren, Material und Mentoring – bis zum Abschluss. Einmalig oder monatlich, sicher über betterplace.org.',
+    cta: 'Spenden über betterplace',
+    impactLabel: '01 — Wirkung',
+    impactNum: '10 €',
+    impactText: 'decken das Schreibpapier für eine:n Schüler:in der Sekundarstufe – ein ganzes Jahr lang.',
+    impactTodo: 'Weitere belegte Beispielbeträge vom Vorstand (Uniform, Schulgebühren pro Term, Internat).',
+    bankLabel: '02 — Überweisung',
+    bankText: 'Für eine Zuwendungsbestätigung gib bitte deine Adresse im Verwendungszweck an.',
+    copy: 'Kopieren',
+    copied: 'Kopiert',
+    faqLabel: '03 — FAQ',
     faq: [
-      { q: 'Ist meine Spende steuerlich absetzbar?', a: 'Ja. Smiles Africa e.V. ist als gemeinnützig anerkannt. Bei Spenden über betterplace.org bekommst du die Bestätigung von dort.' },
-      { q: 'Wohin genau geht mein Geld?', a: 'Spenden fließen in einen gemeinsamen Topf, damit alle Stipendiat:innen bekommen, was sie brauchen: Schulgebühren, Uniformen, Material, Mentoring und – wenn nötig – Nachhilfe.' },
-      { q: 'Kann ich regelmäßig spenden?', a: 'Ja, auf betterplace.org kannst du eine monatliche oder jährliche Dauerspende einrichten. Gerade sie gibt uns Planungssicherheit für mehrjährige Bildungswege.' },
+      ['Ist meine Spende steuerlich absetzbar?', 'Ja. Bei Spenden über betterplace.org erhältst du die Zuwendungsbestätigung automatisch von dort.'],
+      ['Wohin geht mein Geld?', 'In einen gemeinsamen Topf, damit alle Stipendiat:innen bekommen, was sie brauchen: Schulgebühren, Uniformen, Material, Mentoring und – wenn nötig – Nachhilfe.'],
+      ['Kann ich regelmäßig spenden?', 'Ja, auf betterplace.org kannst du eine monatliche oder jährliche Spende einrichten. Das gibt uns Planungssicherheit für mehrjährige Bildungswege.'],
     ],
-    transparency: 'Wie wir Spenden verwenden, zeigen wir auf unserer Transparenzseite.',
+    docsTodo: 'Transparenz: Jahresbericht 2025, Satzung und Freistellungsbescheid als PDF verlinken.',
   },
   en: {
-    title: 'Donate',
-    heroTitle: 'Give a future',
-    lead: 'Your donation pays school fees, materials and mentoring for children and young people from Korogocho – until they complete their education.',
+    label: 'Donate',
+    title: 'Give a',
+    highlight: 'future.',
+    lead: 'Your donation pays school fees, materials and mentoring – until graduation. One-off or monthly, securely via betterplace.org.',
     cta: 'Donate via betterplace',
-    ctaNote: 'One-off or recurring. betterplace.org automatically sends a German tax receipt.',
-    impactTitle: 'What your donation does',
-    impact: [{ amount: '€10', text: 'Writing paper for one secondary school student – for a whole year.' }],
-    impactTodo: 'More verified example amounts (school uniform, fees per term, boarding school) from the board.',
-    bankTitle: 'Prefer a bank transfer?',
-    bankText: 'Transfer directly to our association’s account. For a tax receipt, please add your address to the reference or email us.',
-    faqTitle: 'FAQ',
+    impactLabel: '01 — Impact',
+    impactNum: '€10',
+    impactText: 'covers writing paper for one secondary school student – for a whole year.',
+    impactTodo: 'More verified example amounts from the board (uniform, fees per term, boarding school).',
+    bankLabel: '02 — Bank transfer',
+    bankText: 'For a German tax receipt, please add your address to the payment reference.',
+    copy: 'Copy',
+    copied: 'Copied',
+    faqLabel: '03 — FAQ',
     faq: [
-      { q: 'Is my donation tax-deductible?', a: 'Yes, in Germany. Smiles Africa e.V. is a registered non-profit. Donations via betterplace.org receive a receipt from there.' },
-      { q: 'Where exactly does my money go?', a: 'Donations go into a shared pool so that every scholar gets what they need: school fees, uniforms, materials, mentoring and tutoring where necessary.' },
-      { q: 'Can I donate regularly?', a: 'Yes, betterplace.org lets you set up a monthly or yearly donation. Recurring gifts help us plan multi-year education paths.' },
+      ['Is my donation tax-deductible?', 'Yes, in Germany. betterplace.org automatically sends a receipt for donations made there.'],
+      ['Where does my money go?', 'Into a shared pool so every scholar gets what they need: school fees, uniforms, materials, mentoring and tutoring where necessary.'],
+      ['Can I donate regularly?', 'Yes, betterplace.org lets you set up a monthly or yearly donation. That helps us plan multi-year education paths.'],
     ],
-    transparency: 'See how we use donations on our transparency page.',
+    docsTodo: 'Transparency: link annual report 2025, statutes and tax-exemption notice as PDFs.',
   },
 }[lang];
 ---
 
-<BaseLayout lang={lang} title={c.title} routeKey="donate">
-  <PageHero title={c.heroTitle} lead={c.lead}>
+<BaseLayout lang={lang} title={c.label} routeKey="donate">
+  <PageIntro label={c.label} title={c.title} highlight={c.highlight} lead={c.lead}>
     <div class="actions">
-      <a class="btn btn--dark" href={links.betterplaceDonate} rel="noopener">{c.cta}</a>
+      <a class="btn btn--accent big" href={links.betterplaceDonate} rel="noopener">{c.cta} <span class="arrow">↗</span></a>
     </div>
-    <p class="note">{c.ctaNote}</p>
-  </PageHero>
+  </PageIntro>
 
   <section class="section">
-    <div class="container grid grid--2">
-      <div>
-        <h2>{c.impactTitle}</h2>
-        <ul class="impact">
-          {c.impact.map((i) => <li><strong>{i.amount}</strong><span>{i.text}</span></li>)}
-        </ul>
-        <Todo label={lang === 'de' ? 'Inhalt folgt' : 'Content pending'}>{c.impactTodo}</Todo>
-      </div>
-      <div class="bank">
-        <h2>{c.bankTitle}</h2>
-        <p>{c.bankText}</p>
-        <dl>
-          <dt>{lang === 'de' ? 'Empfänger' : 'Recipient'}</dt><dd>{org.name}</dd>
-          <dt>IBAN</dt><dd><code>{org.iban}</code></dd>
-          <dt>BIC</dt><dd><code>{org.bic}</code></dd>
-        </dl>
+    <div class="container split">
+      <p class="label" data-reveal>{c.impactLabel}</p>
+      <div data-reveal>
+        <p class="impact"><span class="accent">{c.impactNum}</span> {c.impactText}</p>
+        <Todo>{c.impactTodo}</Todo>
       </div>
     </div>
   </section>
 
-  <section class="section section--white">
-    <div class="container narrow">
-      <h2>{c.faqTitle}</h2>
-      {
-        c.faq.map((f) => (
-          <details class="faq">
-            <summary>{f.q}</summary>
-            <p>{f.a}</p>
-          </details>
-        ))
-      }
-      <p><a href={url('transparency', lang)}>{c.transparency}</a></p>
+  <section class="section">
+    <div class="container split">
+      <p class="label" data-reveal>{c.bankLabel}</p>
+      <div class="card bank" data-reveal>
+        <dl>
+          <dt>{lang === 'de' ? 'Empfänger' : 'Recipient'}</dt>
+          <dd>{org.name}</dd>
+          <dt>IBAN</dt>
+          <dd><code>{org.iban}</code> <button type="button" class="copy" data-copy={org.iban.replaceAll(' ', '')} data-done={c.copied}>{c.copy}</button></dd>
+          <dt>BIC</dt>
+          <dd><code>{org.bic}</code></dd>
+        </dl>
+        <p class="note">{c.bankText}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split">
+      <p class="label" data-reveal>{c.faqLabel}</p>
+      <div data-reveal>
+        {
+          c.faq.map(([q, a]) => (
+            <details class="faq">
+              <summary>{q}</summary>
+              <p>{a}</p>
+            </details>
+          ))
+        }
+        <Todo>{c.docsTodo}</Todo>
+      </div>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .note {
-    font-size: 0.95rem;
-    margin-top: 12px;
+  .big {
+    min-height: 60px;
+    font-size: 1.05rem;
+    padding-inline: 2em;
   }
 
   .impact {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    font-size: clamp(1.6rem, 3.6vw, 2.8rem);
+    font-weight: 700;
+    font-stretch: 112%;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
   }
 
-  .impact li {
-    display: flex;
-    gap: 16px;
-    align-items: baseline;
-    padding: 16px 0;
-    border-bottom: 2px solid var(--line);
-  }
-
-  .impact strong {
-    font-size: 2rem;
+  .impact .accent {
     font-stretch: 125%;
-    min-width: 4ch;
-  }
-
-  .bank {
-    background: var(--white);
-    border: 2px solid var(--black);
-    border-radius: var(--radius);
-    padding: 24px;
+    font-weight: 800;
   }
 
   dl {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 6px 16px;
+    gap: 14px 24px;
     margin: 0;
+    align-items: center;
   }
 
   dt {
-    font-weight: 700;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
   dd {
     margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
   }
 
-  .faq {
-    border-bottom: 2px solid var(--line);
-    padding: 16px 0;
+  code {
+    font-family: var(--mono);
+    font-size: clamp(0.9rem, 2.2vw, 1.15rem);
   }
 
-  .faq summary {
-    font-weight: 700;
+  .copy {
+    font: inherit;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--accent);
     cursor: pointer;
   }
 
+  .note {
+    margin: 24px 0 0;
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+
+  .faq {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .faq summary {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 24px 0;
+    font-weight: 700;
+    font-size: 1.15rem;
+    cursor: pointer;
+  }
+
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq summary::after {
+    content: '+';
+    font-family: var(--mono);
+    color: var(--accent);
+    transition: transform 0.3s var(--ease);
+  }
+
+  .faq[open] summary::after {
+    transform: rotate(45deg);
+  }
+
   .faq p {
-    margin: 12px 0 0;
+    color: var(--muted);
+    margin: 0 0 24px;
+    max-width: 60ch;
   }
 </style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(btn.dataset.copy ?? '');
+      const label = btn.textContent;
+      btn.textContent = btn.dataset.done ?? '✓';
+      setTimeout(() => (btn.textContent = label), 1600);
+    });
+  });
+</script>

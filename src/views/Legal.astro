@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Todo from '../components/Todo.astro';
+import { links, org, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  page: 'imprint' | 'privacy';
+}
+const { lang, page } = Astro.props;
+const de = lang === 'de';
+const title = page === 'imprint' ? (de ? 'Impressum' : 'Imprint') : de ? 'Datenschutz' : 'Privacy';
+---
+
+<BaseLayout lang={lang} title={title} routeKey={page}>
+  <PageIntro label={de ? 'Rechtliches' : 'Legal'} title={title} />
+  <section class="section legal">
+    <div class="container narrow">
+      {
+        page === 'imprint' ? (
+          <>
+            <h2>{de ? 'Angaben gemäß § 5 DDG' : 'Information according to § 5 DDG'}</h2>
+            <p>{org.name}<br />{org.street}<br />{org.city}</p>
+            <p>E-Mail: <a class="link" href={`mailto:${links.email}`}>{links.email}</a></p>
+            <Todo>{de ? 'Vereinsregister (Amtsgericht, Nummer), vertretungsberechtigter Vorstand und Verantwortliche nach § 18 Abs. 2 MStV ergänzen; juristisch prüfen.' : 'Add register court and number, authorised board members and the person responsible under § 18 (2) MStV; legal review.'}</Todo>
+          </>
+        ) : (
+          <>
+            <p class="lead">{de ? 'Diese Website setzt keine Cookies und lädt ohne deine Einwilligung keine Inhalte von Drittanbietern. Schriften werden lokal ausgeliefert.' : 'This website sets no cookies and loads no third-party content without your consent. Fonts are served locally.'}</p>
+            <h2>YouTube</h2>
+            <p>{de ? 'Videos werden erst nach einem Klick über youtube-nocookie.com (Google Ireland Ltd.) geladen. Dabei werden Daten wie deine IP-Adresse an Google übertragen.' : 'Videos are only loaded from youtube-nocookie.com (Google Ireland Ltd.) after you click. Data such as your IP address is then transferred to Google.'}</p>
+            <h2>betterplace.org</h2>
+            <p>{de ? 'Für Spenden wirst du zu betterplace.org weitergeleitet. Dort gilt die Datenschutzerklärung von betterplace.' : 'For donations you are redirected to betterplace.org, whose privacy policy applies there.'}</p>
+            <Todo label={de ? 'ENTWURF' : 'DRAFT'}>{de ? 'Vollständige Datenschutzerklärung (Verantwortlicher, Hosting bei one.com, Server-Logs, Rechte der Betroffenen) erstellen und juristisch prüfen.' : 'Write the full privacy policy (controller, hosting at one.com, server logs, data subject rights) and have it reviewed.'}</Todo>
+          </>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal h2 {
+    font-size: clamp(1.2rem, 2.4vw, 1.6rem);
+    margin-top: 2em;
+  }
+
+  .legal p {
+    color: var(--muted);
+  }
+</style>

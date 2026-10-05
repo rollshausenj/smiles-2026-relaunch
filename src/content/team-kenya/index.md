@@ -1,5 +1,5 @@
 ---
-# This page is maintained by the Smiles Africa team in Kenya.
+# This section of the Team page is maintained by the Smiles Africa team in Kenya.
 # Edit the text below in English. Add team members to the list.
 title: "Our team in Nairobi"
 updated: 2026-10-05

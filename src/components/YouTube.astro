@@ -1,26 +1,31 @@
 ---
 /**
  * Zwei-Klick-Einbettung: Erst nach Klick wird youtube-nocookie.com geladen.
- * Vorher wird nur ein lokales Platzhalterbild gezeigt – keine Daten an Google.
+ * Vorher wird nur ein lokales Vorschaubild gezeigt – keine Daten an Google.
  */
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import { t, url, type Lang } from '../i18n/ui';
 
 interface Props {
   id: string;
   title: string;
   lang: Lang;
+  poster?: ImageMetadata;
 }
 
-const { id, title, lang } = Astro.props;
+const { id, title, lang, poster } = Astro.props;
+const bg = poster ? (await getImage({ src: poster, width: 1400, format: 'webp' })).src : undefined;
 ---
 
 <figure class="yt" data-id={id} data-title={title}>
-  <button type="button" class="play">
-    <span class="icon" aria-hidden="true">▶</span>
-    <span>{t(lang, 'video.play')}</span>
+  <button type="button" class="play" style={bg ? `--poster: url(${bg})` : undefined}>
+    <span class="icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"></path></svg>
+    </span>
+    <span class="text">{t(lang, 'video.play')}</span>
   </button>
   <figcaption>
-    <strong>{title}</strong><br />
     {t(lang, 'video.consent')} <a href={url('privacy', lang)}>{lang === 'de' ? 'Datenschutz' : 'Privacy'}</a>
   </figcaption>
 </figure>
@@ -31,21 +36,24 @@ const { id, title, lang } = Astro.props;
   }
 
   .play {
+    position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    background: var(--black);
-    color: var(--yellow);
-    border: 0;
+    gap: 14px;
+    border: 1px solid var(--line);
     border-radius: var(--radius);
+    background:
+      linear-gradient(rgb(11 11 12 / 0.55), rgb(11 11 12 / 0.75)),
+      var(--poster, radial-gradient(circle at 30% 20%, rgb(238 226 6 / 0.18), transparent 60%)) center / cover,
+      var(--bg-2);
+    color: var(--text);
     font: inherit;
-    font-weight: 800;
-    text-transform: uppercase;
     cursor: pointer;
+    overflow: hidden;
   }
 
   .icon {
@@ -54,15 +62,31 @@ const { id, title, lang } = Astro.props;
     width: 72px;
     height: 72px;
     border-radius: 50%;
-    background: var(--yellow);
-    color: var(--black);
-    font-size: 1.8rem;
+    background: var(--accent);
+    color: var(--accent-ink);
+    transition: transform 0.3s var(--ease);
+    box-shadow: 0 0 0 10px rgb(238 226 6 / 0.15);
+  }
+
+  .play:hover .icon {
+    transform: scale(1.08);
+  }
+
+  .text {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
 
   figcaption {
-    font-size: 0.85rem;
-    color: var(--ink-muted);
-    margin-top: 8px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 10px;
+  }
+
+  figcaption a {
+    text-decoration: underline;
   }
 
   .yt :global(iframe) {

@@ -1,0 +1,201 @@
+---
+import { Image } from 'astro:assets';
+import { getEntry, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Todo from '../components/Todo.astro';
+import { links, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/team/*.{png,jpg,jpeg}', { eager: true });
+const photo = (slug: string) => Object.entries(photos).find(([p]) => p.includes(`/${slug}.`))?.[1].default;
+
+// Stand der alten Website (Oktober 2026). Rollen vor dem Relaunch prüfen.
+const team: { slug: string; name: string; role?: Record<Lang, string> }[] = [
+  { slug: 'peter', name: 'Peter Mwashi Litonde', role: { de: 'Initiator · Gründer', en: 'Initiator · Co-founder' } },
+  { slug: 'rahel', name: 'Rahel Rollshausen', role: { de: 'Gründerin · Vorsitzende', en: 'Co-founder · Chair' } },
+  { slug: 'kerstin', name: 'Kerstin Bonni', role: { de: 'Gründerin', en: 'Co-founder' } },
+  { slug: 'julian', name: 'Julian Rollshausen', role: { de: 'Initiator · Gründer', en: 'Initiator · Co-founder' } },
+  { slug: 'monica', name: 'Monica Wanja', role: { de: 'Initiatorin · Gründerin', en: 'Initiator · Co-founder' } },
+  { slug: 'hermann', name: 'Hermann Dapper', role: { de: 'Schatzmeister', en: 'Treasurer' } },
+  { slug: 'majbritt', name: 'Majbritt Doege', role: { de: 'Vorstand Kommunikation', en: 'Communications' } },
+  { slug: 'malte', name: 'Malte Haring', role: { de: 'Gründer · Vorstand Finanzen', en: 'Co-founder · Finance' } },
+  { slug: 'paul', name: 'Paul Gradinger', role: { de: 'Gründer', en: 'Co-founder' } },
+  { slug: 'mario', name: 'Mario Hofmann', role: { de: 'Stellv. Vorsitzender', en: 'Deputy chair' } },
+  { slug: 'yannic', name: 'Yannic Riegger' },
+  { slug: 'marie', name: 'Marie Worms' },
+  { slug: 'antonia', name: 'Antonia May' },
+  { slug: 'gentrix', name: 'Gentrix Adhiambo' },
+  { slug: 'jannik', name: 'Jannik Dornbusch' },
+  { slug: 'andreas', name: 'Andreas Goebbel' },
+  { slug: 'charles', name: 'Charles Maina' },
+  { slug: 'christina', name: 'Christina Schwab' },
+];
+
+// Abschnitt des kenianischen Teams: src/content/team-kenya/index.md (pflegt das Team selbst)
+const kenya = await getEntry('teamKenya', 'index');
+if (!kenya) throw new Error('src/content/team-kenya/index.md fehlt');
+const { Content: KenyaContent } = await render(kenya);
+
+const c = {
+  de: {
+    label: 'Team',
+    title: 'Zwei Teams,',
+    highlight: 'ein Ziel.',
+    lead: '2016 als Grassroots-Projekt von Kenianer:innen und deutschen Volunteers gestartet. Mainz sammelt Spenden, Nairobi begleitet die Stipendiat:innen vor Ort.',
+    deLabel: '01 — Das Team',
+    deText: 'Studierende und Berufstätige in Deutschland und Kenia – alle mit Herz dabei.',
+    keLabel: '02 — Nairobi',
+    keNote: 'Dieser Abschnitt wird vom Team in Kenia auf Englisch gepflegt.',
+    todo: 'Rollen und Zuordnung der Fotos prüfen (übernommen von der alten Website).',
+  },
+  en: {
+    label: 'Team',
+    title: 'Two teams,',
+    highlight: 'one goal.',
+    lead: 'Started in 2016 as a grassroots project by Kenyans and German volunteers. Mainz raises donations, Nairobi mentors the scholars on site.',
+    deLabel: '01 — The team',
+    deText: 'Students and professionals in Germany and Kenya – all in it with heart.',
+    keLabel: '02 — Nairobi',
+    keNote: '',
+    todo: 'Check roles and photo assignments (taken from the old website).',
+  },
+}[lang];
+---
+
+<BaseLayout lang={lang} title={c.label} routeKey="team">
+  <PageIntro label={c.label} title={c.title} highlight={c.highlight} lead={c.lead} />
+
+  <section class="section">
+    <div class="container">
+      <p class="label" data-reveal>{c.deLabel}</p>
+      <p class="lead" data-reveal>{c.deText}</p>
+      <ul class="people">
+        {
+          team.map((m) => {
+            const img = photo(m.slug);
+            return (
+              <li data-reveal>
+                <div class="pic">
+                  {img ? <Image src={img} alt={m.name} widths={[240, 480]} sizes="(min-width: 900px) 20vw, 45vw" /> : <span>{m.name[0]}</span>}
+                </div>
+                <strong>{m.name}</strong>
+                {m.role && <small>{m.role[lang]}</small>}
+              </li>
+            );
+          })
+        }
+      </ul>
+      <Todo>{c.todo}</Todo>
+    </div>
+  </section>
+
+  <section class="section kenya">
+    <div class="container split">
+      <div data-reveal>
+        <p class="label">{c.keLabel}</p>
+        <h2>{kenya.data.title}</h2>
+        <a class="link" href={links.instagramKe} rel="noopener">@smilesafricacharity_ke ↗</a>
+      </div>
+      <div data-reveal lang="en">
+        {c.keNote && <p class="note">{c.keNote}</p>}
+        <div class="lead"><KenyaContent /></div>
+        {
+          kenya.data.members.length > 0 && (
+            <ul class="ke-members">
+              {kenya.data.members.map((m) => (
+                <li>
+                  <strong>{m.name}</strong>
+                  {m.role && <small>{m.role}</small>}
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .people {
+    list-style: none;
+    margin: 48px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 32px 20px;
+    grid-template-columns: repeat(auto-fill, minmax(min(45%, 200px), 1fr));
+  }
+
+  .people li {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .pic {
+    aspect-ratio: 1;
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    margin-bottom: 12px;
+    display: grid;
+    place-items: center;
+  }
+
+  .pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) contrast(1.05);
+    transition: filter 0.5s var(--ease), transform 0.6s var(--ease);
+  }
+
+  .people li:hover .pic img {
+    filter: grayscale(0);
+    transform: scale(1.03);
+  }
+
+  .pic span {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  small {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .kenya {
+    background: radial-gradient(ellipse at 0% 100%, rgb(238 226 6 / 0.08), transparent 60%);
+  }
+
+  .note {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .ke-members {
+    list-style: none;
+    padding: 0;
+    margin: 32px 0 0;
+    display: grid;
+    gap: 16px;
+  }
+
+  .ke-members li {
+    display: flex;
+    flex-direction: column;
+    padding-left: 16px;
+    border-left: 2px solid var(--accent);
+  }
+</style>

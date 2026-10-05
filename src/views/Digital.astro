@@ -1,6 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageHero from '../components/PageHero.astro';
+import PageIntro from '../components/PageIntro.astro';
 import YouTube from '../components/YouTube.astro';
 import { url, type Lang } from '../i18n/ui';
 import digital from '../assets/img/digital-empowerment.jpg';
@@ -16,57 +17,143 @@ const participants = ['Sharon', 'Kizito', 'Felix', 'Shanel', 'Mike', 'Iscah', 'S
 
 const c = {
   de: {
-    eyebrow: 'Abgeschlossenes Projekt · 2020',
-    title: 'Digital Empowerment',
-    lead: 'Digitale Bildung kann ein Schlüssel aus der Armut sein. Anfang 2020 haben wir deshalb einen einwöchigen Intensiv-Workshop mit jungen Erwachsenen aus Korogocho veranstaltet.',
-    goalTitle: 'Ziel',
-    goal: 'Die Teilnehmenden sollten mit WordPress eigene Websites bauen, live schalten und danach selbstständig pflegen. Ein Digital-Empowerment-Netzwerk sollte den Austausch dauerhaft sichern und das Wissen weitertragen.',
-    resultTitle: 'Ergebnis',
-    result: 'Fast alle Teilnehmenden sind nach sechs Tagen mit ihrer eigenen Website online gegangen. Das Netzwerk entstand, und die Seiten wurden auch ohne uns weiterentwickelt.',
-    peopleTitle: 'Die Teilnehmenden',
-    videosTitle: 'Der Workshop im Video',
-    back: 'Zurück zu den Projekten',
+    label: 'Abgeschlossenes Projekt · 2020',
+    lead: 'Digitale Bildung kann ein Schlüssel aus der Armut sein. In einem einwöchigen Intensiv-Workshop haben junge Erwachsene aus Korogocho mit WordPress ihre eigenen Websites gebaut.',
+    stats: [
+      ['6', 'Tage Workshop'],
+      ['9', 'Teilnehmende'],
+      ['1', 'Netzwerk, das weiterlebt'],
+    ],
+    resultLabel: '01 — Ergebnis',
+    result: 'Fast alle Teilnehmenden sind nach sechs Tagen mit ihrer eigenen Website online gegangen. Das Digital-Empowerment-Netzwerk ist entstanden – und die Seiten wurden auch ohne uns weiterentwickelt.',
+    peopleLabel: '02 — Die Crew',
+    videosLabel: '03 — Recap',
+    back: 'Zurück zum Projekt',
   },
   en: {
-    eyebrow: 'Completed project · 2020',
-    title: 'Digital Empowerment',
-    lead: 'Digital skills can be a way out of poverty. In early 2020 we ran a one-week intensive workshop with young adults from Korogocho.',
-    goalTitle: 'Goal',
-    goal: 'Participants were to build their own websites with WordPress, publish them and maintain them independently. A Digital Empowerment network was to keep the exchange going and pass the knowledge on.',
-    resultTitle: 'Result',
-    result: 'After six days almost every participant went live with their own website. The network was set up, and the sites kept evolving without us.',
-    peopleTitle: 'The participants',
-    videosTitle: 'The workshop on video',
-    back: 'Back to projects',
+    label: 'Completed project · 2020',
+    lead: 'Digital skills can be a way out of poverty. In a one-week intensive workshop, young adults from Korogocho built their own websites with WordPress.',
+    stats: [
+      ['6', 'days of workshop'],
+      ['9', 'participants'],
+      ['1', 'network that lives on'],
+    ],
+    resultLabel: '01 — Result',
+    result: 'After six days almost every participant went live with their own website. The Digital Empowerment network was set up – and the sites kept evolving without us.',
+    peopleLabel: '02 — The crew',
+    videosLabel: '03 — Recap',
+    back: 'Back to the project',
   },
 }[lang];
 ---
 
-<BaseLayout lang={lang} title={c.title} routeKey="digital">
-  <PageHero eyebrow={c.eyebrow} title={c.title} lead={c.lead} image={digital} imageAlt="" />
+<BaseLayout lang={lang} title="Digital Empowerment" routeKey="digital">
+  <PageIntro label={c.label} title="Digital" highlight="Empowerment" lead={c.lead} />
 
   <section class="section">
-    <div class="container grid grid--2">
-      <div>
-        <h2>{c.goalTitle}</h2>
-        <p>{c.goal}</p>
+    <div class="container">
+      <div class="stats" data-reveal>
+        {
+          c.stats.map(([n, text]) => (
+            <div>
+              <strong>{n}</strong>
+              <span>{text}</span>
+            </div>
+          ))
+        }
       </div>
-      <div>
-        <h2>{c.resultTitle}</h2>
-        <p>{c.result}</p>
-        <h3>{c.peopleTitle}</h3>
-        <p>{participants.join(' · ')}</p>
+      <div class="split result">
+        <div data-reveal>
+          <p class="label">{c.resultLabel}</p>
+          <p class="lead">{c.result}</p>
+        </div>
+        <Image src={digital} alt="" widths={[600, 1000, 1400]} sizes="(min-width: 900px) 55vw, 100vw" class="photo" data-reveal />
       </div>
     </div>
   </section>
 
-  <section class="section section--white">
+  <section class="section">
     <div class="container">
-      <h2>{c.videosTitle}</h2>
-      <div class="grid grid--3">
-        {videos.map((id, i) => <YouTube id={id} title={`Digital Empowerment ${i + 1}`} lang={lang} />)}
+      <p class="label" data-reveal>{c.peopleLabel}</p>
+      <ul class="crew" data-reveal>
+        {participants.map((p) => <li>{p}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <p class="label" data-reveal>{c.videosLabel}</p>
+      <div class="videos">
+        {videos.map((id, i) => <div data-reveal><YouTube id={id} title={`Digital Empowerment ${i + 1}`} lang={lang} /></div>)}
       </div>
-      <p><a href={url('projects', lang)}>← {c.back}</a></p>
+      <p><a class="link" href={url('project', lang)}>← {c.back}</a></p>
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-block: 1px solid var(--line);
+    margin-bottom: 80px;
+  }
+
+  .stats div {
+    padding: 28px 16px 28px 0;
+  }
+
+  .stats div + div {
+    border-left: 1px solid var(--line);
+    padding-left: clamp(16px, 3vw, 32px);
+  }
+
+  .stats strong {
+    display: block;
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    font-stretch: 125%;
+    line-height: 1;
+    color: var(--accent);
+  }
+
+  .stats span {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .result {
+    align-items: center;
+  }
+
+  .result .photo {
+    aspect-ratio: 16 / 10;
+  }
+
+  .crew {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .crew li {
+    padding: 12px 22px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-weight: 700;
+    font-stretch: 112%;
+    font-size: clamp(1rem, 2vw, 1.3rem);
+  }
+
+  .videos {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+    margin-bottom: 48px;
+  }
+</style>

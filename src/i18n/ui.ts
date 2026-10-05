@@ -2,19 +2,15 @@ export const languages = { de: 'Deutsch', en: 'English' } as const;
 export type Lang = keyof typeof languages;
 export const defaultLang: Lang = 'de';
 
-/** Jede Seite hat einen Schlüssel; darüber findet der Sprachumschalter die Übersetzung. */
+/** Jede Seite hat einen Schlüssel; darüber findet der Sprachumschalter die Übersetzung.
+ *  Die deutschen URLs entsprechen der alten WordPress-Seite. */
 export const routes = {
   home: { de: '/', en: '/en/' },
+  project: { de: '/projekt/', en: '/en/project/' },
+  digital: { de: '/digital-empowerment/', en: '/en/digital-empowerment/' },
   donate: { de: '/spenden/', en: '/en/donate/' },
-  projects: { de: '/projekte/', en: '/en/projects/' },
-  education: { de: '/projekte/bildungssystem/', en: '/en/projects/education-system/' },
-  digital: { de: '/projekte/digital-empowerment/', en: '/en/projects/digital-empowerment/' },
-  hygiene: { de: '/projekte/hygiene/', en: '/en/projects/hygiene/' },
-  news: { de: '/aktuelles/', en: '/en/news/' },
-  about: { de: '/ueber-uns/', en: '/en/about/' },
-  teamKenya: { de: '/ueber-uns/team-kenya/', en: '/en/about/team-kenya/' },
-  transparency: { de: '/ueber-uns/transparenz/', en: '/en/about/transparency/' },
-  join: { de: '/mitmachen/', en: '/en/get-involved/' },
+  team: { de: '/team/', en: '/en/team/' },
+  volunteer: { de: '/volunteer/', en: '/en/volunteer/' },
   contact: { de: '/kontakt/', en: '/en/contact/' },
   imprint: { de: '/impressum/', en: '/en/imprint/' },
   privacy: { de: '/datenschutz/', en: '/en/privacy/' },
@@ -22,11 +18,10 @@ export const routes = {
 export type RouteKey = keyof typeof routes;
 
 export const nav: { key: RouteKey; label: Record<Lang, string> }[] = [
-  { key: 'donate', label: { de: 'Spenden', en: 'Donate' } },
-  { key: 'projects', label: { de: 'Projekte', en: 'Projects' } },
-  { key: 'news', label: { de: 'Aktuelles', en: 'News' } },
-  { key: 'about', label: { de: 'Über uns', en: 'About us' } },
-  { key: 'join', label: { de: 'Mitmachen', en: 'Get involved' } },
+  { key: 'project', label: { de: 'Projekt', en: 'Project' } },
+  { key: 'digital', label: { de: 'Digital', en: 'Digital' } },
+  { key: 'team', label: { de: 'Team', en: 'Team' } },
+  { key: 'volunteer', label: { de: 'Volunteer', en: 'Volunteer' } },
   { key: 'contact', label: { de: 'Kontakt', en: 'Contact' } },
 ];
 
@@ -37,15 +32,10 @@ export const ui = {
     'site.description':
       'Smiles Africa e.V. ermöglicht Kindern und Jugendlichen aus Korogocho, Nairobi, eine zukunftsorientierte Ausbildung – durch Stipendien und Mentoring vor Ort.',
     'cta.donate': 'Jetzt spenden',
-    'cta.join': 'Mitmachen',
+    'cta.join': 'Werde Volunteer',
     'cta.more': 'Mehr erfahren',
     'nav.menu': 'Menü',
     'nav.skip': 'Zum Inhalt springen',
-    'news.readMore': 'Weiterlesen',
-    'news.all': 'Alle Beiträge',
-    'news.latest': 'Aktuelles',
-    'news.by': 'von',
-    'news.empty': 'Noch keine Beiträge auf Englisch – hier sind die neuesten deutschen Beiträge.',
     'footer.contactDe': 'Kontakt Deutschland',
     'footer.contactKe': 'Kontakt Kenia',
     'footer.bank': 'Spendenkonto',
@@ -60,15 +50,10 @@ export const ui = {
     'site.description':
       'Smiles Africa e.V. gives children and young people from Korogocho, Nairobi, access to future-oriented education – through scholarships and local mentoring.',
     'cta.donate': 'Donate now',
-    'cta.join': 'Get involved',
+    'cta.join': 'Become a volunteer',
     'cta.more': 'Learn more',
     'nav.menu': 'Menu',
     'nav.skip': 'Skip to content',
-    'news.readMore': 'Read more',
-    'news.all': 'All posts',
-    'news.latest': 'News',
-    'news.by': 'by',
-    'news.empty': 'No English posts yet – here are our latest posts in German.',
     'footer.contactDe': 'Contact Germany',
     'footer.contactKe': 'Contact Kenya',
     'footer.bank': 'Bank details',

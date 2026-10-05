@@ -1,0 +1,142 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import { links, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+const c = {
+  de: {
+    label: 'Volunteer',
+    title: 'Aktiv',
+    highlight: 'werden.',
+    lead: 'Vor Ort in Nairobi oder von zu Hause aus – such dir aus, wie du anpacken willst.',
+    ways: [
+      {
+        tag: 'Nairobi',
+        title: 'Smiles Africa Experience',
+        text: 'Unsere Schwesterorganisation, gegründet von Peter Mwashi Litonde, vermittelt Freiwillige an passende Projekte in Nairobi – Sozialprojekte, Finance oder ein Slum-Radio. Im Fokus steht gegenseitiges Lernen, nicht Voluntourism.',
+        cta: 'Zu Smiles Africa Experience',
+        href: 'https://www.smilesafricaexperience.com',
+      },
+      {
+        tag: 'Deutschland',
+        title: 'Ehrenamt im Verein',
+        text: 'Kommunikation, Fundraising, Events, Design oder Finanzen: Unser Team arbeitet von verschiedenen Orten aus zusammen. Erzähl uns, was du kannst.',
+        cta: 'Schreib uns',
+        href: `mailto:${links.email}?subject=Ehrenamt`,
+      },
+      {
+        tag: 'Schulen & Firmen',
+        title: 'Eigene Aktion starten',
+        text: 'Schullauf, Kuchenverkauf oder Bierdeckel mit QR-Code wie bei „MAINZ FÜR SMILES“ – wir helfen beim Planen.',
+        cta: 'Aktion anfragen',
+        href: `mailto:${links.email}?subject=Aktion`,
+      },
+    ],
+  },
+  en: {
+    label: 'Volunteer',
+    title: 'Get',
+    highlight: 'involved.',
+    lead: 'On site in Nairobi or from home – choose how you want to help.',
+    ways: [
+      {
+        tag: 'Nairobi',
+        title: 'Smiles Africa Experience',
+        text: 'Our sister organisation, founded by Peter Mwashi Litonde, matches volunteers with projects in Nairobi – social projects, finance or a slum radio. The focus is learning from each other, not voluntourism.',
+        cta: 'Visit Smiles Africa Experience',
+        href: 'https://www.smilesafricaexperience.com',
+      },
+      {
+        tag: 'Germany',
+        title: 'Volunteer with us',
+        text: 'Communications, fundraising, events, design or finance: our team works together from different places. Tell us what you can do.',
+        cta: 'Email us',
+        href: `mailto:${links.email}?subject=Volunteering`,
+      },
+      {
+        tag: 'Schools & companies',
+        title: 'Start your own campaign',
+        text: 'A charity run, a bake sale or coasters with a QR code like “MAINZ FÜR SMILES” – we help you plan it.',
+        cta: 'Plan a campaign',
+        href: `mailto:${links.email}?subject=Campaign`,
+      },
+    ],
+  },
+}[lang];
+---
+
+<BaseLayout lang={lang} title={c.label} routeKey="volunteer">
+  <PageIntro label={c.label} title={c.title} highlight={c.highlight} lead={c.lead} />
+
+  <section class="section">
+    <div class="container ways">
+      {
+        c.ways.map((w, i) => (
+          <article class="way" data-reveal>
+            <span class="idx">0{i + 1}</span>
+            <div>
+              <span class="tag">{w.tag}</span>
+              <h2>{w.title}</h2>
+              <p class="lead">{w.text}</p>
+            </div>
+            <a class={i === 0 ? 'btn btn--accent' : 'btn'} href={w.href} rel={w.href.startsWith('http') ? 'noopener' : undefined}>
+              {w.cta} <span class="arrow">{w.href.startsWith('http') ? '↗' : '→'}</span>
+            </a>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .ways {
+    display: grid;
+  }
+
+  .way {
+    display: grid;
+    gap: 24px;
+    padding-block: 48px;
+    border-top: 1px solid var(--line);
+  }
+
+  .way:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  @media (min-width: 900px) {
+    .way {
+      grid-template-columns: 80px 1fr auto;
+      align-items: start;
+    }
+  }
+
+  .idx,
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+  }
+
+  .tag {
+    display: block;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  h2 {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+  }
+
+  .lead {
+    margin: 0;
+  }
+</style>
