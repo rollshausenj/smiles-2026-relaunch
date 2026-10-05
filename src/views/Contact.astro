@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageIntro from '../components/PageIntro.astro';
+import StillHero from '../components/StillHero.astro';
+import still from '../assets/stills/kontakt.jpg';
 import { links, org, type Lang } from '../i18n/ui';
 
 interface Props {
@@ -11,14 +12,14 @@ const de = lang === 'de';
 ---
 
 <BaseLayout lang={lang} title={de ? 'Kontakt' : 'Contact'} routeKey="contact">
-  <PageIntro
+  <StillHero image={still} focus="center 40%"
     label={de ? 'Kontakt' : 'Contact'}
     title={de ? 'Sprich' : 'Say'}
     highlight={de ? 'uns an.' : 'hello.'}
     lead={de ? 'Fragen zu Spenden, Kooperationen oder Presse? Schreib uns – wir melden uns.' : 'Questions about donations, partnerships or press? Drop us a line.'}
   >
     <a class="mail" href={`mailto:${links.email}`}>{links.email} <span class="accent">↗</span></a>
-  </PageIntro>
+  </StillHero>
 
   <section class="section">
     <div class="container places">
@@ -42,7 +43,6 @@ const de = lang === 'de';
     margin-top: 1rem;
     font-size: clamp(1.4rem, 4.5vw, 3rem);
     font-weight: 700;
-    font-stretch: 112%;
     letter-spacing: -0.02em;
     border-bottom: 2px solid var(--line);
     transition: border-color 0.3s;

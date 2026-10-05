@@ -1,5 +1,4 @@
-@import '@fontsource-variable/archivo/wdth.css';
-@import '@fontsource-variable/jetbrains-mono';
+@import '@fontsource-variable/roboto-mono';
 
 :root {
   --bg: #0b0b0c;
@@ -11,8 +10,8 @@
   --accent: #eee206;
   --accent-ink: #0b0b0c;
 
-  --font: 'Archivo Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font: 'Roboto Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+  --mono: var(--font);
   --radius: 22px;
   --gutter: clamp(16px, 5vw, 56px);
   --max: 1240px;
@@ -35,8 +34,8 @@ html {
 body {
   margin: 0;
   font-family: var(--font);
-  font-size: 1.0625rem;
-  line-height: 1.65;
+  font-size: 1rem;
+  line-height: 1.7;
   color: var(--text);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
@@ -67,28 +66,26 @@ a {
 h1,
 h2,
 h3 {
-  font-weight: 800;
-  font-stretch: 125%;
-  line-height: 0.98;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.05em;
   margin: 0 0 0.5em;
   text-wrap: balance;
 }
 
 h1 {
-  font-size: clamp(2.6rem, 8.5vw, 7rem);
+  font-size: clamp(2.3rem, 7.5vw, 6rem);
   text-transform: uppercase;
 }
 
 h2 {
-  font-size: clamp(2rem, 5vw, 3.75rem);
+  font-size: clamp(1.8rem, 4.4vw, 3.4rem);
   text-transform: uppercase;
 }
 
 h3 {
-  font-size: clamp(1.15rem, 1.8vw, 1.4rem);
-  font-stretch: 112%;
-  letter-spacing: -0.01em;
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  letter-spacing: -0.03em;
   line-height: 1.2;
 }
 
@@ -142,8 +139,8 @@ p {
 }
 
 .lead {
-  font-size: clamp(1.15rem, 1.9vw, 1.45rem);
-  line-height: 1.5;
+  font-size: clamp(1.02rem, 1.6vw, 1.2rem);
+  line-height: 1.65;
   color: var(--muted);
   max-width: 60ch;
 }
@@ -174,9 +171,9 @@ p {
   min-height: 52px;
   padding: 0.8em 1.6em;
   border-radius: 999px;
-  font-weight: 700;
-  font-size: 0.98rem;
-  letter-spacing: 0.01em;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: -0.01em;
   border: 1px solid var(--line);
   color: var(--text);
   background: var(--surface);
@@ -243,6 +240,7 @@ p {
   width: 100%;
   border-radius: var(--radius);
   object-fit: cover;
+  filter: grayscale(1) contrast(1.05);
 }
 
 /* Erscheinen beim Scrollen – ohne JS bleibt alles sichtbar */

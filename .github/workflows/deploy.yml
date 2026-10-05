@@ -60,8 +60,8 @@ jobs:
             lftp -u "$USER","$PASS" -p "$PORT" "sftp://$HOST" -e "
               set sftp:auto-confirm yes;
               echo '--- Startordner:'; pwd; cls -la;
-              echo '--- webroots:'; cls -la webroots;
-              echo '--- Zielordner:'; cls -la '$REMOTE_DIR';
+              echo '--- webroots:'; cls -la webroots/;
+              echo '--- Inhalt je Webroot:'; cls -1 webroots/*/;
               bye" || true
             exit 0
           fi

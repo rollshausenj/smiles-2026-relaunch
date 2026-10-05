@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageIntro from '../components/PageIntro.astro';
+import StillHero from '../components/StillHero.astro';
+import still from '../assets/stills/volunteer.jpg';
 import { links, type Lang } from '../i18n/ui';
 
 interface Props {
@@ -71,7 +72,7 @@ const c = {
 ---
 
 <BaseLayout lang={lang} title={c.label} routeKey="volunteer">
-  <PageIntro label={c.label} title={c.title} highlight={c.highlight} lead={c.lead} />
+  <StillHero image={still} focus="center 45%" label={c.label} title={c.title} highlight={c.highlight} lead={c.lead} />
 
   <section class="section">
     <div class="container ways">

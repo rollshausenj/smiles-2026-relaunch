@@ -2,7 +2,8 @@
 import { Image } from 'astro:assets';
 import { getEntry, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageIntro from '../components/PageIntro.astro';
+import StillHero from '../components/StillHero.astro';
+import still from '../assets/stills/zuhoeren.jpg';
 import Todo from '../components/Todo.astro';
 import { links, type Lang } from '../i18n/ui';
 
@@ -68,7 +69,7 @@ const c = {
 ---
 
 <BaseLayout lang={lang} title={c.label} routeKey="team">
-  <PageIntro label={c.label} title={c.title} highlight={c.highlight} lead={c.lead} />
+  <StillHero image={still} focus="center 30%" label={c.label} title={c.title} highlight={c.highlight} lead={c.lead} />
 
   <section class="section">
     <div class="container">
@@ -163,7 +164,7 @@ const c = {
 
   .pic span {
     font-size: 3rem;
-    font-weight: 800;
+    font-weight: 700;
     color: var(--accent);
   }
 

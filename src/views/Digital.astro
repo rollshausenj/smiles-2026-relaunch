@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageIntro from '../components/PageIntro.astro';
+import StillHero from '../components/StillHero.astro';
 import YouTube from '../components/YouTube.astro';
 import { url, type Lang } from '../i18n/ui';
 import digital from '../assets/img/digital-empowerment.jpg';
@@ -48,7 +48,7 @@ const c = {
 ---
 
 <BaseLayout lang={lang} title="Digital Empowerment" routeKey="digital">
-  <PageIntro label={c.label} title="Digital" highlight="Empowerment" lead={c.lead} />
+  <StillHero label={c.label} title="Digital" highlight="Empowerment" lead={c.lead} />
 
   <section class="section">
     <div class="container">
@@ -112,7 +112,6 @@ const c = {
   .stats strong {
     display: block;
     font-size: clamp(2.5rem, 7vw, 5rem);
-    font-stretch: 125%;
     line-height: 1;
     color: var(--accent);
   }
@@ -146,7 +145,6 @@ const c = {
     border: 1px solid var(--line);
     border-radius: 999px;
     font-weight: 700;
-    font-stretch: 112%;
     font-size: clamp(1rem, 2vw, 1.3rem);
   }
 

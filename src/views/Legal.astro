@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageIntro from '../components/PageIntro.astro';
+import StillHero from '../components/StillHero.astro';
 import Todo from '../components/Todo.astro';
 import { links, org, type Lang } from '../i18n/ui';
 
@@ -14,7 +14,7 @@ const title = page === 'imprint' ? (de ? 'Impressum' : 'Imprint') : de ? 'Datens
 ---
 
 <BaseLayout lang={lang} title={title} routeKey={page}>
-  <PageIntro label={de ? 'Rechtliches' : 'Legal'} title={title} />
+  <StillHero label={de ? 'Rechtliches' : 'Legal'} title={title} />
   <section class="section legal">
     <div class="container narrow">
       {

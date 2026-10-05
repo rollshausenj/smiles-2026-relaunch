@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageIntro from '../components/PageIntro.astro';
+import StillHero from '../components/StillHero.astro';
+import still from '../assets/stills/lachen.jpg';
 import Todo from '../components/Todo.astro';
 import { links, org, type Lang } from '../i18n/ui';
 
@@ -58,11 +59,11 @@ const c = {
 ---
 
 <BaseLayout lang={lang} title={c.label} routeKey="donate">
-  <PageIntro label={c.label} title={c.title} highlight={c.highlight} lead={c.lead}>
+  <StillHero image={still} focus="center 35%" label={c.label} title={c.title} highlight={c.highlight} lead={c.lead}>
     <div class="actions">
       <a class="btn btn--accent big" href={links.betterplaceDonate} rel="noopener">{c.cta} <span class="arrow">↗</span></a>
     </div>
-  </PageIntro>
+  </StillHero>
 
   <section class="section">
     <div class="container split">
@@ -119,14 +120,12 @@ const c = {
   .impact {
     font-size: clamp(1.6rem, 3.6vw, 2.8rem);
     font-weight: 700;
-    font-stretch: 112%;
     line-height: 1.15;
     letter-spacing: -0.01em;
   }
 
   .impact .accent {
-    font-stretch: 125%;
-    font-weight: 800;
+    font-weight: 700;
   }
 
   dl {

@@ -1,7 +1,8 @@
 ---
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageIntro from '../components/PageIntro.astro';
+import StillHero from '../components/StillHero.astro';
+import still from '../assets/stills/korogocho-gasse.jpg';
 import Todo from '../components/Todo.astro';
 import { t, url, type Lang } from '../i18n/ui';
 import korogocho from '../assets/img/korogocho.jpg';
@@ -79,11 +80,11 @@ const c = {
 ---
 
 <BaseLayout lang={lang} title={`${c.title} ${c.highlight}`} routeKey="project">
-  <PageIntro label={c.label} title={c.title} highlight={c.highlight} lead={c.lead}>
+  <StillHero image={still} focus="center 40%" label={c.label} title={c.title} highlight={c.highlight} lead={c.lead}>
     <div class="actions">
       <a class="btn btn--accent" href={url('donate', lang)}>{t(lang, 'cta.donate')} <span class="arrow">→</span></a>
     </div>
-  </PageIntro>
+  </StillHero>
 
   <section class="section">
     <div class="container">

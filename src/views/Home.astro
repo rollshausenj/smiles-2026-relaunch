@@ -2,10 +2,11 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import YouTube from '../components/YouTube.astro';
+import StillHero from '../components/StillHero.astro';
+import heroStill from '../assets/stills/kinder-lachen.jpg';
+import mentorshipStill from '../assets/stills/mentorship.jpg';
 import { t, url, type Lang } from '../i18n/ui';
-import abschluss from '../assets/img/abschluss-2026.jpg';
 import kidsLernen from '../assets/img/kids-lernen.jpg';
-import universitaet from '../assets/img/universitaet.jpg';
 import digital from '../assets/img/digital-empowerment.jpg';
 
 interface Props {
@@ -18,7 +19,6 @@ const c = {
     label: 'Smiles Africa Charity · seit 2016',
     h1: ['Gleiche', 'Chancen für', 'alle Kinder.'],
     lead: 'Wir finanzieren Bildungsstipendien für Kinder und Jugendliche aus Korogocho, Nairobi – und begleiten sie mit Mentoring, bis ihr Bildungsweg abgeschlossen ist.',
-    chip: 'Korogocho, Nairobi ↔ Mainz',
     marquee: ['Scholarship', 'Mentorship', 'Qualitative Bildung', 'Korogocho', 'Nairobi', 'Mainz'],
     goalLabel: '01 — Unser Ziel',
     goalTitle: 'Bildung, die Zukunft schafft.',
@@ -26,7 +26,7 @@ const c = {
     projectsLabel: '02 — Projekte',
     projectsTitle: 'Was wir tun',
     projects: [
-      { key: 'project', img: universitaet, tag: 'Laufend', title: 'Qualitative Bildung', text: 'Stipendien und Mentoring – von der Grundschule bis zur Uni.' },
+      { key: 'project', img: mentorshipStill, tag: 'Laufend', title: 'Qualitative Bildung', text: 'Stipendien und Mentoring – von der Grundschule bis zur Uni.' },
       { key: 'digital', img: digital, tag: '2020', title: 'Digital Empowerment', text: 'Junge Erwachsene aus Korogocho bauen ihre eigenen Websites.' },
     ],
     videoLabel: '03 — Einblick',
@@ -36,7 +36,6 @@ const c = {
     label: 'Smiles Africa Charity · since 2016',
     h1: ['Equal', 'chances for', 'every child.'],
     lead: 'We fund scholarships for children and young people from Korogocho, Nairobi – and mentor them until they complete their education.',
-    chip: 'Korogocho, Nairobi ↔ Mainz',
     marquee: ['Scholarship', 'Mentorship', 'Quality education', 'Korogocho', 'Nairobi', 'Mainz'],
     goalLabel: '01 — Our goal',
     goalTitle: 'Education that creates a future.',
@@ -44,7 +43,7 @@ const c = {
     projectsLabel: '02 — Projects',
     projectsTitle: 'What we do',
     projects: [
-      { key: 'project', img: universitaet, tag: 'Ongoing', title: 'Quality education', text: 'Scholarships and mentoring – from primary school to university.' },
+      { key: 'project', img: mentorshipStill, tag: 'Ongoing', title: 'Quality education', text: 'Scholarships and mentoring – from primary school to university.' },
       { key: 'digital', img: digital, tag: '2020', title: 'Digital Empowerment', text: 'Young adults from Korogocho build their own websites.' },
     ],
     videoLabel: '03 — Inside',
@@ -54,27 +53,12 @@ const c = {
 ---
 
 <BaseLayout lang={lang} routeKey="home">
-  <section class="hero">
-    <div class="gridbg" aria-hidden="true"></div>
-    <div class="glow" aria-hidden="true"></div>
-    <div class="container hero-grid">
-      <div class="hero-text">
-        <p class="label" data-reveal>{c.label}</p>
-        <h1 data-reveal>
-          {c.h1[0]}<br />{c.h1[1]}<br /><span class="accent">{c.h1[2]}</span>
-        </h1>
-        <p class="lead" data-reveal>{c.lead}</p>
-        <div class="actions" data-reveal>
-          <a class="btn btn--accent" href={url('donate', lang)}>{t(lang, 'cta.donate')} <span class="arrow">→</span></a>
-          <a class="btn" href={url('volunteer', lang)}>{t(lang, 'cta.join')}</a>
-        </div>
-      </div>
-      <figure class="hero-photo" data-reveal>
-        <Image src={abschluss} alt="" widths={[400, 640]} sizes="(min-width: 900px) 40vw, 100vw" loading="eager" />
-        <figcaption>{c.chip}</figcaption>
-      </figure>
+  <StillHero image={heroStill} focus="center 35%" full label={c.label} title={c.h1[0] + ' ' + c.h1[1]} highlight={c.h1[2]} lead={c.lead}>
+    <div class="actions">
+      <a class="btn btn--accent" href={url('donate', lang)}>{t(lang, 'cta.donate')} <span class="arrow">→</span></a>
+      <a class="btn" href={url('volunteer', lang)}>{t(lang, 'cta.join')}</a>
     </div>
-  </section>
+  </StillHero>
 
   <div class="marquee" aria-hidden="true">
     <div class="track">
@@ -128,83 +112,6 @@ const c = {
 </BaseLayout>
 
 <style>
-  .hero {
-    position: relative;
-    min-height: 100svh;
-    display: flex;
-    align-items: center;
-    padding-block: 140px 80px;
-    overflow: hidden;
-  }
-
-  .gridbg {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
-    background-size: 64px 64px;
-    background-position: center;
-    mask-image: radial-gradient(ellipse at 60% 30%, #000 20%, transparent 75%);
-    -webkit-mask-image: radial-gradient(ellipse at 60% 30%, #000 20%, transparent 75%);
-    pointer-events: none;
-  }
-
-  .glow {
-    position: absolute;
-    width: 60vmax;
-    height: 60vmax;
-    right: -15vmax;
-    top: -20vmax;
-    background: radial-gradient(circle, rgb(238 226 6 / 0.22), transparent 60%);
-    filter: blur(40px);
-    pointer-events: none;
-  }
-
-  .hero-grid {
-    position: relative;
-    display: grid;
-    gap: 56px;
-    align-items: center;
-  }
-
-  @media (min-width: 900px) {
-    .hero-grid {
-      grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
-    }
-  }
-
-  .hero h1 {
-    font-size: clamp(2.6rem, 5.4vw, 5.25rem);
-  }
-
-  .hero-photo {
-    position: relative;
-    margin: 0;
-  }
-
-  .hero-photo img {
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    border-radius: var(--radius);
-    filter: saturate(0.9) contrast(1.05);
-  }
-
-  .hero-photo figcaption {
-    position: absolute;
-    left: 16px;
-    bottom: 16px;
-    padding: 8px 14px;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    background: rgb(11 11 12 / 0.7);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    font-family: var(--mono);
-    font-size: 0.75rem;
-  }
-
   /* Laufband */
   .marquee {
     overflow: hidden;
@@ -223,8 +130,7 @@ const c = {
     align-items: center;
     gap: 28px;
     padding-right: 28px;
-    font-weight: 800;
-    font-stretch: 125%;
+    font-weight: 700;
     text-transform: uppercase;
     font-size: clamp(1.1rem, 2.2vw, 1.6rem);
     color: transparent;
@@ -279,12 +185,9 @@ const c = {
     width: 100%;
     aspect-ratio: 16 / 10;
     object-fit: cover;
-    transition: transform 0.8s var(--ease);
+    filter: grayscale(1) contrast(1.05);
   }
 
-  .project:hover .frame img {
-    transform: scale(1.04);
-  }
 
   .meta {
     padding: 24px 28px 28px;
