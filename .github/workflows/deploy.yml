@@ -12,6 +12,11 @@ on:
       - "package-lock.json"
       - ".github/workflows/deploy.yml"
   workflow_dispatch:
+    inputs:
+      list_only:
+        description: "Nur Ordner auf dem Server auflisten, nichts hochladen"
+        type: boolean
+        default: false
 
 # Immer nur ein Upload gleichzeitig; ein neuer Push ersetzt einen wartenden
 concurrency:
@@ -51,6 +56,15 @@ jobs:
             exit 1
           fi
           sudo apt-get install -y -qq lftp > /dev/null
+          if [ "${{ inputs.list_only }}" = "true" ]; then
+            lftp -u "$USER","$PASS" -p "$PORT" "sftp://$HOST" -e "
+              set sftp:auto-confirm yes;
+              echo '--- Startordner:'; pwd; cls -la;
+              echo '--- webroots:'; cls -la webroots;
+              echo '--- Zielordner:'; cls -la '$REMOTE_DIR';
+              bye" || true
+            exit 0
+          fi
           # Ohne --delete: alte Dateien bleiben liegen, aber nichts außerhalb von dist/ wird angefasst
           lftp -u "$USER","$PASS" -p "$PORT" "sftp://$HOST" -e "
             set sftp:auto-confirm yes;
