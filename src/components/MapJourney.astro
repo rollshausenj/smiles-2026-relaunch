@@ -1,0 +1,331 @@
+---
+/**
+ * Kartenfolge Welt → Kenia → Nairobi. Die SVGs werden beim Build aus Natural-Earth-Daten
+ * (gemeinfrei) berechnet – kein Kartendienst, keine externen Anfragen.
+ */
+import { geoArea, geoContains, geoDistance, geoEqualEarth, geoMercator, geoPath } from 'd3-geo';
+import type { Feature, FeatureCollection, Geometry, MultiPolygon, Polygon } from 'geojson';
+import { feature } from 'topojson-client';
+import land110 from 'world-atlas/land-110m.json';
+import countries50 from 'world-atlas/countries-50m.json';
+import provinces from '../data/kenya-counties.json';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+type Pt = [number, number];
+const MAINZ: Pt = [8.2473, 49.9929];
+const NAIROBI: Pt = [36.8172, -1.2864];
+// Korogocho, Nordosten Nairobis (ungefähre Lage)
+const KOROGOCHO: Pt = [36.8875, -1.2235];
+
+// GeoJSON aus Natural Earth ist gegen den Uhrzeigersinn gewickelt; d3 erwartet das Gegenteil.
+function rewind<T extends Feature<Polygon | MultiPolygon>>(f: T): T {
+  if (geoArea(f) <= 2 * Math.PI) return f;
+  const g = f.geometry;
+  const rev = (rings: number[][][]) => rings.map((r) => [...r].reverse());
+  const geometry =
+    g.type === 'Polygon'
+      ? { ...g, coordinates: rev(g.coordinates) }
+      : { ...g, coordinates: g.coordinates.map(rev) };
+  return { ...f, geometry } as T;
+}
+
+const W = 400;
+const H = 300;
+const PAD = 24;
+
+// Punktraster innerhalb einer Fläche – der „Tech“-Look der Karten
+function dots(projection: { invert?: (p: Pt) => Pt | null }, area: Feature<Geometry>, step: number, minLat = -90) {
+  const out: Pt[] = [];
+  for (let y = step / 2; y < H; y += step) {
+    for (let x = step / 2; x < W; x += step) {
+      const ll = projection.invert?.([x, y]);
+      if (ll && ll[1] > minLat && geoContains(area, ll)) out.push([x, y]);
+    }
+  }
+  return out;
+}
+
+// 1 · Welt
+const land = feature(land110 as any, (land110 as any).objects.land) as unknown as Feature<MultiPolygon>;
+const kenya = rewind(
+  (feature(countries50 as any, (countries50 as any).objects.countries) as unknown as FeatureCollection<Polygon | MultiPolygon>).features.find(
+    (f) => String(f.id) === '404',
+  )!,
+);
+// Ausschnitt ohne Antarktis und hohe Arktis, damit die Karte die Fläche füllt
+const frame: Pt[] = [];
+for (let lon = -168; lon <= 190; lon += 4) frame.push([lon, -56], [lon, 78]);
+for (let lat = -56; lat <= 78; lat += 4) frame.push([-168, lat], [190, lat]);
+const world = geoEqualEarth()
+  .rotate([-11, 0])
+  .fitExtent([[4, 4], [W - 4, H - 4]], { type: 'MultiPoint', coordinates: frame } as any);
+{
+  // vertikal mittig ausrichten
+  const [[, y0], [, y1]] = geoPath(world).bounds({ type: 'MultiPoint', coordinates: frame } as any);
+  const [tx, ty] = world.translate();
+  world.translate([tx, ty + (H - y0 - y1) / 2]);
+}
+const worldPath = geoPath(world);
+const worldDots = dots(world, land, 6, -55).map(([x, y]) => {
+  const ll = world.invert!([x, y])!;
+  return { x, y, ke: geoContains(kenya, ll) };
+});
+const route = worldPath({ type: 'LineString', coordinates: [MAINZ, NAIROBI] }) ?? '';
+const mainzXY = world(MAINZ)!;
+const nairobiWorldXY = world(NAIROBI)!;
+const km = Math.round((geoDistance(MAINZ, NAIROBI) * 6371) / 10) * 10;
+
+// 2 · Kenia
+const kenyaProj = geoMercator().fitExtent([[PAD, PAD], [W - PAD, H - PAD]], kenya);
+const kenyaPath = geoPath(kenyaProj);
+const kenyaDots = dots(kenyaProj, kenya, 9);
+const provinceFeatures = (provinces as unknown as FeatureCollection<Polygon | MultiPolygon>).features.map(rewind);
+const provinceLines = provinceFeatures.map((f) => kenyaPath(f) ?? '');
+const nairobiKenyaXY = kenyaProj(NAIROBI)!;
+
+// 3 · Nairobi
+const nairobiArea = provinceFeatures.find((f) => f.properties?.name === 'Nairobi')!;
+const cityProj = geoMercator().fitExtent([[PAD, PAD + 8], [W - PAD, H - PAD - 16]], nairobiArea);
+const cityPath = geoPath(cityProj);
+const cityDots = dots(cityProj, nairobiArea, 8);
+const cbdXY = cityProj(NAIROBI)!;
+const koroXY = cityProj(KOROGOCHO)!;
+// Maßstab: 5 km
+const [sx0] = cityProj([36.75, -1.38])!;
+const [sx1] = cityProj([36.75 + 5 / (111.32 * Math.cos((1.38 * Math.PI) / 180)), -1.38])!;
+const scale5km = sx1 - sx0;
+
+const fmt = (n: number) => n.toLocaleString(lang === 'de' ? 'de-DE' : 'en-GB');
+const c = {
+  de: {
+    label: '02 — Wo wir wirken',
+    title: 'Von Mainz nach Korogocho',
+    cards: [
+      { tag: '01 / Welt', meta: `${fmt(km)} km Luftlinie`, caption: 'Mainz ↔ Nairobi' },
+      { tag: '02 / Kenia', meta: '1°17′S 36°49′E', caption: 'Nairobi, Hauptstadt' },
+      { tag: '03 / Nairobi', meta: 'ca. 1°13′S 36°53′E', caption: 'Korogocho' },
+    ],
+    note: 'Korogocho ist eine der größten informellen Siedlungen Nairobis – hier wachsen unsere Stipendiat:innen auf.',
+  },
+  en: {
+    label: '02 — Where we work',
+    title: 'From Mainz to Korogocho',
+    cards: [
+      { tag: '01 / World', meta: `${fmt(km)} km as the crow flies`, caption: 'Mainz ↔ Nairobi' },
+      { tag: '02 / Kenya', meta: '1°17′S 36°49′E', caption: 'Nairobi, capital' },
+      { tag: '03 / Nairobi', meta: 'approx. 1°13′S 36°53′E', caption: 'Korogocho' },
+    ],
+    note: 'Korogocho is one of Nairobi’s largest informal settlements – this is where our scholars grow up.',
+  },
+}[lang];
+---
+
+<section class="section maps">
+  <div class="container">
+    <p class="label" data-reveal>{c.label}</p>
+    <h2 data-reveal>{c.title}</h2>
+
+    <div class="cards">
+      <figure class="map card" data-reveal>
+        <figcaption><span>{c.cards[0].tag}</span><span>{c.cards[0].meta}</span></figcaption>
+        <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={c.cards[0].caption}>
+          <g class="grid">{worldDots.map((d) => <circle cx={d.x} cy={d.y} r={d.ke ? 2 : 1.35} class={d.ke ? 'hot' : undefined} />)}</g>
+          <path class="route" d={route} pathLength="1" />
+          <circle class="pin" cx={mainzXY[0]} cy={mainzXY[1]} r="3" />
+          <circle class="pin accent" cx={nairobiWorldXY[0]} cy={nairobiWorldXY[1]} r="3.5" />
+          <circle class="pulse" cx={nairobiWorldXY[0]} cy={nairobiWorldXY[1]} r="3.5" />
+          <text x={mainzXY[0] + 8} y={mainzXY[1] - 6}>Mainz</text>
+          <text x={nairobiWorldXY[0] + 8} y={nairobiWorldXY[1] + 4}>Nairobi</text>
+        </svg>
+        <p class="caption">{c.cards[0].caption}</p>
+      </figure>
+
+      <figure class="map card" data-reveal>
+        <figcaption><span>{c.cards[1].tag}</span><span>{c.cards[1].meta}</span></figcaption>
+        <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={c.cards[1].caption}>
+          <g class="grid">{kenyaDots.map(([x, y]) => <circle cx={x} cy={y} r="1.4" />)}</g>
+          <g class="inner">{provinceLines.map((d) => <path d={d} />)}</g>
+          <path class="outline" d={kenyaPath(kenya) ?? ''} />
+          <circle class="pin accent" cx={nairobiKenyaXY[0]} cy={nairobiKenyaXY[1]} r="4" />
+          <circle class="pulse" cx={nairobiKenyaXY[0]} cy={nairobiKenyaXY[1]} r="4" />
+          <text x={nairobiKenyaXY[0] + 10} y={nairobiKenyaXY[1] + 4}>Nairobi</text>
+        </svg>
+        <p class="caption">{c.cards[1].caption}</p>
+      </figure>
+
+      <figure class="map card" data-reveal>
+        <figcaption><span>{c.cards[2].tag}</span><span>{c.cards[2].meta}</span></figcaption>
+        <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={c.cards[2].caption}>
+          <g class="grid">{cityDots.map(([x, y]) => <circle cx={x} cy={y} r="1.4" />)}</g>
+          <path class="outline" d={cityPath(nairobiArea) ?? ''} />
+          <circle class="pin" cx={cbdXY[0]} cy={cbdXY[1]} r="3" />
+          <text x={cbdXY[0] + 8} y={cbdXY[1] + 14}>CBD</text>
+          <circle class="pin accent" cx={koroXY[0]} cy={koroXY[1]} r="5" />
+          <circle class="pulse" cx={koroXY[0]} cy={koroXY[1]} r="5" />
+          <text class="strong" x={koroXY[0] + 12} y={koroXY[1] - 8}>Korogocho</text>
+          <g class="scale">
+            <line x1={PAD} x2={PAD + scale5km} y1={H - 14} y2={H - 14} />
+            <text x={PAD} y={H - 20}>5 km</text>
+          </g>
+        </svg>
+        <p class="caption">{c.cards[2].caption}</p>
+      </figure>
+    </div>
+
+    <p class="lead note" data-reveal>{c.note}</p>
+  </div>
+</section>
+
+<style>
+  .cards {
+    display: grid;
+    gap: 20px;
+    margin-top: 48px;
+  }
+
+  @media (min-width: 900px) {
+    .cards {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .map {
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  figcaption {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+
+  figcaption span:first-child {
+    color: var(--accent);
+  }
+
+  svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+  }
+
+  .grid circle {
+    fill: rgb(255 255 255 / 0.22);
+  }
+
+  .grid circle.hot {
+    fill: var(--accent);
+  }
+
+  .inner path {
+    fill: none;
+    stroke: rgb(255 255 255 / 0.12);
+    stroke-width: 0.8;
+  }
+
+  .outline {
+    fill: rgb(238 226 6 / 0.04);
+    stroke: var(--accent);
+    stroke-width: 1.4;
+    stroke-linejoin: round;
+  }
+
+  .route {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.6;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 2.2s var(--ease) 0.4s;
+  }
+
+  :global(.is-visible) .route,
+  :global(html:not(.js)) .route {
+    stroke-dashoffset: 0;
+  }
+
+  .pin {
+    fill: var(--text);
+  }
+
+  .pin.accent {
+    fill: var(--accent);
+  }
+
+  .pulse {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pulse 2.4s ease-out infinite;
+  }
+
+  @keyframes pulse {
+    from {
+      transform: scale(1);
+      opacity: 0.9;
+    }
+    to {
+      transform: scale(4.5);
+      opacity: 0;
+    }
+  }
+
+  text {
+    font-family: var(--mono);
+    font-size: 12px;
+    fill: var(--text);
+  }
+
+  text.strong {
+    fill: var(--accent);
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .scale line {
+    stroke: var(--muted);
+    stroke-width: 1.5;
+  }
+
+  .scale text {
+    fill: var(--muted);
+    font-size: 10px;
+  }
+
+  .caption {
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .note {
+    margin-top: 32px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pulse {
+      display: none;
+    }
+
+    .route {
+      stroke-dashoffset: 0;
+      transition: none;
+    }
+  }
+</style>

@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import YouTube from '../components/YouTube.astro';
 import StillHero from '../components/StillHero.astro';
+import MapJourney from '../components/MapJourney.astro';
 import heroStill from '../assets/stills/kinder-lachen.jpg';
 import mentorshipStill from '../assets/stills/mentorship.jpg';
 import { t, url, type Lang } from '../i18n/ui';
@@ -19,34 +20,32 @@ const c = {
     label: 'Smiles Africa Charity · seit 2016',
     h1: ['Gleiche', 'Chancen für', 'alle Kinder.'],
     lead: 'Wir finanzieren Bildungsstipendien für Kinder und Jugendliche aus Korogocho, Nairobi – und begleiten sie mit Mentoring, bis ihr Bildungsweg abgeschlossen ist.',
-    marquee: ['Scholarship', 'Mentorship', 'Qualitative Bildung', 'Korogocho', 'Nairobi', 'Mainz'],
     goalLabel: '01 — Unser Ziel',
     goalTitle: 'Bildung, die Zukunft schafft.',
     goal: 'Smiles Africa Charity ist eine gemeinnützige Organisation. Unser Ziel: Kindern und Jugendlichen aus Randgesellschaften in Kenia eine <strong>zukunftsorientierte Ausbildung</strong> ermöglichen – mit Spenden für Bildungsstipendien und der Betreuung durch ein Team, das selbst in Korogocho aufgewachsen ist.',
-    projectsLabel: '02 — Projekte',
+    projectsLabel: '03 — Projekte',
     projectsTitle: 'Was wir tun',
     projects: [
       { key: 'project', img: mentorshipStill, tag: 'Laufend', title: 'Qualitative Bildung', text: 'Stipendien und Mentoring – von der Grundschule bis zur Uni.' },
       { key: 'digital', img: digital, tag: '2020', title: 'Digital Empowerment', text: 'Junge Erwachsene aus Korogocho bauen ihre eigenen Websites.' },
     ],
-    videoLabel: '03 — Einblick',
+    videoLabel: '04 — Einblick',
     videoTitle: 'Das sind wir',
   },
   en: {
     label: 'Smiles Africa Charity · since 2016',
     h1: ['Equal', 'chances for', 'every child.'],
     lead: 'We fund scholarships for children and young people from Korogocho, Nairobi – and mentor them until they complete their education.',
-    marquee: ['Scholarship', 'Mentorship', 'Quality education', 'Korogocho', 'Nairobi', 'Mainz'],
     goalLabel: '01 — Our goal',
     goalTitle: 'Education that creates a future.',
     goal: 'Smiles Africa Charity is a non-profit organisation. Our goal: giving children and young people from marginalised communities in Kenya access to <strong>future-oriented education</strong> – through donations for scholarships and support from a team that grew up in Korogocho itself.',
-    projectsLabel: '02 — Projects',
+    projectsLabel: '03 — Projects',
     projectsTitle: 'What we do',
     projects: [
       { key: 'project', img: mentorshipStill, tag: 'Ongoing', title: 'Quality education', text: 'Scholarships and mentoring – from primary school to university.' },
       { key: 'digital', img: digital, tag: '2020', title: 'Digital Empowerment', text: 'Young adults from Korogocho build their own websites.' },
     ],
-    videoLabel: '03 — Inside',
+    videoLabel: '04 — Inside',
     videoTitle: 'This is us',
   },
 }[lang];
@@ -60,12 +59,6 @@ const c = {
     </div>
   </StillHero>
 
-  <div class="marquee" aria-hidden="true">
-    <div class="track">
-      {[0, 1].map(() => c.marquee.map((w) => <span>{w}<i>✦</i></span>))}
-    </div>
-  </div>
-
   <section class="section">
     <div class="container split">
       <div data-reveal>
@@ -75,6 +68,8 @@ const c = {
       <p class="lead" data-reveal set:html={c.goal} />
     </div>
   </section>
+
+  <MapJourney lang={lang} />
 
   <section class="section">
     <div class="container">
@@ -112,44 +107,6 @@ const c = {
 </BaseLayout>
 
 <style>
-  /* Laufband */
-  .marquee {
-    overflow: hidden;
-    border-block: 1px solid var(--line);
-    padding-block: 18px;
-  }
-
-  .track {
-    display: flex;
-    width: max-content;
-    animation: marquee 40s linear infinite;
-  }
-
-  .track span {
-    display: inline-flex;
-    align-items: center;
-    gap: 28px;
-    padding-right: 28px;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: clamp(1.1rem, 2.2vw, 1.6rem);
-    color: transparent;
-    -webkit-text-stroke: 1px var(--muted);
-  }
-
-  .track i {
-    font-style: normal;
-    color: var(--accent);
-    -webkit-text-stroke: 0;
-    font-size: 0.8em;
-  }
-
-  @keyframes marquee {
-    to {
-      transform: translateX(-50%);
-    }
-  }
-
   /* Projekte */
   .projects {
     display: grid;
@@ -185,7 +142,6 @@ const c = {
     width: 100%;
     aspect-ratio: 16 / 10;
     object-fit: cover;
-    filter: grayscale(1) contrast(1.05);
   }
 
 

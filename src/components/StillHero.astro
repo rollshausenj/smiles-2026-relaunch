@@ -1,6 +1,6 @@
 ---
 /**
- * Seitenkopf: großes Schwarzweiß-Standbild (wie auf der alten Seite), darüber ein Aurora-Gradient
+ * Seitenkopf: großes Standbild (wie auf der alten Seite), darüber ein Aurora-Gradient
  * und der Seitentitel. Ohne Bild bleibt nur der Gradient auf dunklem Grund.
  */
 import { Image } from 'astro:assets';
@@ -84,7 +84,7 @@ const { label, title, highlight, lead, image, focus = 'center', full = false } =
     height: 100%;
     object-fit: cover;
     z-index: -2;
-    filter: grayscale(1) contrast(1.1) brightness(0.85);
+    filter: saturate(0.9) brightness(0.85);
   }
 
   /* Abdunkeln nach unten, damit der Text immer lesbar ist */
